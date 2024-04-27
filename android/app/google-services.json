@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "237732499396",
+    "project_id": "emergency-app-da505",
+    "storage_bucket": "emergency-app-da505.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237732499396:android:fc5cf8ca28138255cfde91",
+        "android_client_info": {
+          "package_name": "com.example.emergency"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237732499396:android:4be660d63196dc67cfde91",
+        "android_client_info": {
+          "package_name": "com.example.patient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
