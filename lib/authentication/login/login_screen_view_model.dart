@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:patient/patient_screens/homeScreen_patient.dart';
 
+import '../../dialog_utils.dart';
 import '../../methods/common_methods.dart';
 import 'login_navigator.dart';
 
@@ -36,9 +38,11 @@ class LoginScreenViewModel extends ChangeNotifier {
         //todo: hide loading
         navigator.hideMyLoading();
         //todo: show message
-        navigator.showMessage('Login Successfully');
-        // todo: yro7 y3ml navigate 3la el homescreen 3la tool =>>>>>>>
-        // Navigator.pushReplacementNamed(context, ScreenSelection.routeName);
+        DialogUtils.showMessage(context, 'Login Successfully',
+            title: 'Sign-Up', posActionName: 'ok', posAction: () {
+          Navigator.of(context)
+              .pushReplacementNamed(HomeScreenPatient.routeName);
+        });
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           //todo: hide loading

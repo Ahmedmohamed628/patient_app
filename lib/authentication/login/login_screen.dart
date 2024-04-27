@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: MyTheme.redColor,
-          title: Text('Ambulance App',
-              style: TextStyle(color: MyTheme.whiteColor)),
+          title:
+              Text('Medical App', style: TextStyle(color: MyTheme.whiteColor)),
           centerTitle: true,
         ),
 
@@ -168,9 +168,6 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
       posActionName: 'ok',
       title: 'Sign-In',
       barrierDismissible: false,
-      posAction: () {
-        // h3ml navigate ll home screen
-      },
     );
   }
 }

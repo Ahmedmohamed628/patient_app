@@ -35,8 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen>
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: MyTheme.redColor,
-        title:
-            Text('Ambulance App', style: TextStyle(color: MyTheme.whiteColor)),
+        title: Text('Medical App', style: TextStyle(color: MyTheme.whiteColor)),
         centerTitle: true,
       ),
 
@@ -46,11 +45,14 @@ class _RegisterScreenState extends State<RegisterScreen>
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30),
-              child: CircleAvatar(
-                child: Lottie.asset('assets/images/patient_lottie.json'),
-                radius: 70,
-                backgroundColor: MyTheme.redColor,
-              ),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 80),
+                  child: Lottie.asset('assets/images/patient_lottie.json')),
+              // CircleAvatar(
+              //   child: Lottie.asset('assets/images/patient_lottie.json'),
+              //   radius: 70,
+              //   backgroundColor: MyTheme.redColor,
+              // ),
             ),
             // Image.asset('assets/images/ambulance_icon.png', alignment: Alignment.topCenter),
             Form(

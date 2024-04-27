@@ -16,12 +16,12 @@ class RegisterScreenViewModel extends ChangeNotifier {
   var address = TextEditingController(text: 'alexandria');
 
   // todo: da le el patient
-  var chronicDiseases = TextEditingController();
-  var height = TextEditingController();
-  var weight = TextEditingController();
-  var age = TextEditingController();
-  var gender = TextEditingController();
-  var nationalId = TextEditingController();
+  var chronicDiseases = TextEditingController(text: 'corona virus');
+  var height = TextEditingController(text: '171');
+  var weight = TextEditingController(text: '70');
+  var age = TextEditingController(text: '23');
+  var gender = TextEditingController(text: 'male');
+  var nationalId = TextEditingController(text: '123456789123456');
 
   CommonMethods cMethods = CommonMethods();
   var formKey = GlobalKey<FormState>();
