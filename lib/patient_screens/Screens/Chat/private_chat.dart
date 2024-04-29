@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
-import 'package:dash_chat_2/dash_chat_2.dart';
-
 import 'package:patient/authentication/login/login_screen_view_model.dart';
 import 'package:patient/model/chat_model.dart';
 import 'package:patient/model/message_model.dart';
