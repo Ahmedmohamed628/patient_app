@@ -34,6 +34,7 @@ class RegisterScreenViewModel extends ChangeNotifier {
 
   //todo: hold data - handle logic
   late RegisterNavigator navigator;
+  String? pfpURL;
 
   void register(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
@@ -46,6 +47,12 @@ class RegisterScreenViewModel extends ChangeNotifier {
           password: passwordController.text,
         );
         // print(credential.user?.uid ?? '');
+        userSignUp = credential.user;
+        final currentstatus = userSignUp;
+        if (currentstatus != null && RegisterScreen.selectedImage != null) {
+          pfpURL = await uplaodPfp(
+              file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
+        }
         MyUser myUser = MyUser(
             phoneNumber: phoneNumber.text,
             address: address.text,
@@ -57,13 +64,8 @@ class RegisterScreenViewModel extends ChangeNotifier {
             height: height.text,
             weight: weight.text,
             age: age.text,
-            gender: gender.text);
-        userSignUp = credential.user;
-        final currentstatus = userSignUp;
-        if (currentstatus != null && RegisterScreen.selectedImage != null) {
-          String? pfpURL = await uplaodPfp(
-              file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
-        }
+            gender: gender.text,
+            pfpURL: pfpURL ?? null);
 
         // var authProvider = Provider.of<AuthProvider>(context,listen: false);
         // authProvider.updateUser(myUser);

@@ -11,6 +11,7 @@ class MyUser {
   String? weight;
   String? age;
   String? gender;
+  String? pfpURL;
 
   MyUser(
       {required this.id,
@@ -23,21 +24,24 @@ class MyUser {
       required this.height,
       required this.weight,
       required this.age,
-      required this.gender});
+      required this.gender,
+      required this.pfpURL});
 
   MyUser.fromFireStore(Map<String, dynamic> data)
       : this(
-            id: data['id'],
-            phoneNumber: data['phoneNumber'],
-            address: data['address'],
-            email: data['email'],
-            name: data['name'],
-            nationalId: data['nationalId'],
-            chronicDiseases: data['chronicDiseases'],
-            height: data['height'],
-            weight: data['weight'],
-            age: data['age'],
-            gender: data['gender']);
+          id: data['id'],
+          phoneNumber: data['phoneNumber'],
+          address: data['address'],
+          email: data['email'],
+          name: data['name'],
+          nationalId: data['nationalId'],
+          chronicDiseases: data['chronicDiseases'],
+          height: data['height'],
+          weight: data['weight'],
+          age: data['age'],
+          gender: data['gender'],
+          pfpURL: data['pfpURL'],
+        );
 
   Map<String, dynamic> toFireStore() {
     return {
@@ -51,7 +55,8 @@ class MyUser {
       'height': height,
       'weight': weight,
       'age': age,
-      'gender': gender
+      'gender': gender,
+      'pfpURL': pfpURL
     };
   }
 }
@@ -67,6 +72,7 @@ class MyHospital {
   String? doctorName;
   String? gender;
   String? status;
+  String? pfpURL;
 
   MyHospital({
     required this.id,
@@ -78,6 +84,7 @@ class MyHospital {
     required this.doctorName,
     required this.gender,
     required this.status,
+    required this.pfpURL,
   });
 
   MyHospital.fromFireStore(Map<String, dynamic> data)
@@ -91,6 +98,7 @@ class MyHospital {
           doctorName: data['doctorName'],
           gender: data['gender'],
           status: data['status'],
+          pfpURL: data['pfpURL'],
         );
 
   Map<String, dynamic> toFireStore() {
@@ -104,6 +112,7 @@ class MyHospital {
       'doctorName': doctorName,
       'gender': gender,
       'status': status,
+      'pfpURL': pfpURL
     };
   }
 }
