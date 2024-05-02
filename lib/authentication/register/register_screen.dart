@@ -1,4 +1,11 @@
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path/path.dart' as p;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:patient/authentication/register/register_navigator.dart';
 import 'package:patient/authentication/register/register_screen_view_model.dart';
@@ -11,6 +18,7 @@ import '../login/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = 'register-screen';
+  static File? selectedImage;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -61,6 +69,34 @@ class _RegisterScreenState extends State<RegisterScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      GestureDetector(
+                        onTap: () async {
+                          File? file = await _pickImage();
+                          if (file != null) {
+                            setState(() {
+                              RegisterScreen.selectedImage = file;
+                            });
+                          }
+                        },
+                        child: CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.2,
+                            child: ClipOval(
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height: MediaQuery.of(context).size.width * 0.4,
+                                child: RegisterScreen.selectedImage != null
+                                    ? Image.file(RegisterScreen.selectedImage!,
+                                        fit: BoxFit.cover)
+                                    : Image.asset('assets/images/user.jpg',
+                                        fit: BoxFit.cover),
+                              ),
+                            )
+                            // backgroundImage: selectedImage != null
+                            //     ? FileImage(selectedImage!)
+                            //     : AssetImage('assets/images/user.jpg')
+                            //         as ImageProvider,
+                            ),
+                      ),
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.01),
                       // user name
@@ -294,4 +330,57 @@ class _RegisterScreenState extends State<RegisterScreen>
     DialogUtils.showMessage(context, message,
         posActionName: 'ok', title: 'Sign-Up', barrierDismissible: false);
   }
+
+  Future<File?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Select Image'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: Column(
+                  children: [Icon(Icons.image), Text('Gallery')],
+                ),
+                onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+              SimpleDialogOption(
+                child: Column(
+                  children: [Icon(Icons.camera_alt), Text('Camera')],
+                ),
+                onPressed: () => Navigator.pop(context, ImageSource.camera),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    if (pickedFile != null) {
+      return File(pickedFile.path);
+    }
+    return null;
+  }
+
+  // Future<File?> getImageFromGallary() async {
+  //   final ImagePicker picker = ImagePicker();
+
+  //   final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+  //   if (file != null) {
+  //     return File(file.path);
+  //   }
+  //   return null;
+  // }
+
+  // Future<File?> getImageFromCamera() async {
+  //   final ImagePicker picker = ImagePicker();
+
+  //   final XFile? file = await picker.pickImage(source: ImageSource.camera);
+  //   if (file != null) {
+  //     return File(file.path);
+  //   }
+  //   return null;
+  // }
 }
