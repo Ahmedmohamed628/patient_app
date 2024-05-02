@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,13 +28,15 @@ class PrivateChat extends StatefulWidget {
 
 class _PrivateChatState extends State<PrivateChat> {
   ChatUser? currentUser, otherUser;
+  final userCurrent = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     currentUser = ChatUser(
-      id: LoginScreenViewModel.user!.uid,
-      firstName: LoginScreenViewModel.user!.displayName,
+      id: userCurrent!.uid,
+      firstName: userCurrent!.displayName,
     );
     otherUser = ChatUser(
         id: widget.chatuser.id!,
@@ -130,7 +131,7 @@ class _PrivateChatState extends State<PrivateChat> {
   Widget _mediaMessageButton() {
     return IconButton(
         onPressed: () async {
-          File? filechat = await getImageFromGallary();
+          File? filechat = await _pickImage();
           if (filechat != null) {
             String? ImageURL = await uplaodImageToChat(
                 file: filechat,
@@ -151,12 +152,45 @@ class _PrivateChatState extends State<PrivateChat> {
         icon: Icon(Icons.image));
   }
 
-  Future<File?> getImageFromGallary() async {
-    final ImagePicker picker = ImagePicker();
+  // Future<File?> getImageFromGallary() async {
+  //   final ImagePicker picker = ImagePicker();
 
-    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
-    if (file != null) {
-      return File(file.path);
+  //   final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+  //   if (file != null) {
+  //     return File(file.path);
+  //   }
+  //   return null;
+  // }
+
+  Future<File?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Select Image'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: Column(
+                  children: [Icon(Icons.image), Text('Gallery')],
+                ),
+                onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+              SimpleDialogOption(
+                child: Column(
+                  children: [Icon(Icons.camera_alt), Text('Camera')],
+                ),
+                onPressed: () => Navigator.pop(context, ImageSource.camera),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    if (pickedFile != null) {
+      return File(pickedFile.path);
     }
     return null;
   }

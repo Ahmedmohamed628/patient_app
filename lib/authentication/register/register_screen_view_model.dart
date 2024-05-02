@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:patient/authentication/register/register_navigator.dart';
+import 'package:patient/authentication/register/register_screen.dart';
 import 'package:patient/patient_screens/homeScreen_patient.dart';
-
+import 'package:path/path.dart' as p;
 import '../../dialog_utils.dart';
 import '../../firebase_utils.dart';
 import '../../methods/common_methods.dart';
 import '../../model/my_user.dart';
 
 class RegisterScreenViewModel extends ChangeNotifier {
+  static User? userSignUp;
+
   var emailController = TextEditingController(text: 'ahmed.mohamed7@gmail.com');
   var passwordController = TextEditingController(text: '123456');
   var nameController = TextEditingController(text: 'ahmed');
@@ -28,6 +34,7 @@ class RegisterScreenViewModel extends ChangeNotifier {
 
   //todo: hold data - handle logic
   late RegisterNavigator navigator;
+  String? pfpURL;
 
   void register(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
@@ -40,6 +47,12 @@ class RegisterScreenViewModel extends ChangeNotifier {
           password: passwordController.text,
         );
         // print(credential.user?.uid ?? '');
+        userSignUp = credential.user;
+        final currentstatus = userSignUp;
+        if (currentstatus != null && RegisterScreen.selectedImage != null) {
+          pfpURL = await uplaodPfp(
+              file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
+        }
         MyUser myUser = MyUser(
             phoneNumber: phoneNumber.text,
             address: address.text,
@@ -51,7 +64,9 @@ class RegisterScreenViewModel extends ChangeNotifier {
             height: height.text,
             weight: weight.text,
             age: age.text,
-            gender: gender.text);
+            gender: gender.text,
+            pfpURL: pfpURL ?? null);
+
         // var authProvider = Provider.of<AuthProvider>(context,listen: false);
         // authProvider.updateUser(myUser);
 
@@ -68,9 +83,11 @@ class RegisterScreenViewModel extends ChangeNotifier {
         //     weight: weight.text,
         //     age: age.text,
         //     gender: gender.text);
+
         await FirebaseUtils.addUserToFireStore(myUser);
         //todo: hide loading
         navigator.hideMyLoading();
+
         //todo: show message
         // navigator.showMessage('Register Successfully');
         DialogUtils.showMessage(context, 'Register Successfully',
@@ -106,5 +123,19 @@ class RegisterScreenViewModel extends ChangeNotifier {
         navigator.showMessage(e.toString());
       }
     }
+  }
+
+  Future<String?> uplaodPfp({required File file, required String Uid}) async {
+    final firebaseStorage = FirebaseStorage.instance;
+    Reference fileRef = firebaseStorage
+        .ref('users/pfps')
+        .child("${Uid}${p.extension(file.path)}");
+    UploadTask task = fileRef.putFile(file);
+    return task.then((p0) {
+      if (p0.state == TaskState.success) {
+        return fileRef.getDownloadURL();
+      }
+      return null;
+    });
   }
 }
