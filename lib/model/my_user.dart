@@ -71,7 +71,7 @@ class MyHospital {
   String? doctorId;
   String? doctorName;
   String? gender;
-  String? status;
+  bool? status;
   String? pfpURL;
 
   MyHospital({
