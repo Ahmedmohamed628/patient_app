@@ -1,11 +1,8 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path/path.dart' as p;
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:patient/authentication/register/register_navigator.dart';
 import 'package:patient/authentication/register/register_screen_view_model.dart';
@@ -209,6 +206,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                       ),
                       // weight
                       CustomTextFormField(
+                        prefixIcon: Icon(LineAwesomeIcons.weight,
+                            color: MyTheme.redColor),
                         label: 'Weight',
                         controller: viewModelRegister.weight,
                         validator: (text) {
@@ -246,8 +245,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                       CustomTextFormField(
                         label: 'National Id',
                         controller: viewModelRegister.nationalId,
-                        prefixIcon:
-                            Icon(Icons.perm_identity, color: MyTheme.redColor),
+                        prefixIcon: Icon(LineAwesomeIcons.identification_card,
+                            color: MyTheme.redColor),
                         validator: (text) {
                           if (text == null || text.trim().isEmpty) {
                             return 'Please enter your national id';

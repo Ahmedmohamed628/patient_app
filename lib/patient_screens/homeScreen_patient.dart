@@ -50,7 +50,8 @@ class _HomeScreenPatientState extends State<HomeScreenPatient> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.history, size: 22), label: 'History'),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.settings, size: 22), label: 'Settings'),
+                  icon: Icon(Icons.person_pin_rounded, size: 22),
+                  label: 'Profile'),
             ],
           ),
         ),
@@ -64,6 +65,6 @@ class _HomeScreenPatientState extends State<HomeScreenPatient> {
     MedicationScreen(),
     RootScreen(),
     HistoryScreenPatient(),
-    SettingsScreen()
+    ProfileScreen()
   ];
 }

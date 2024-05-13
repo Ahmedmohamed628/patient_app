@@ -1,12 +1,13 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:path/path.dart' as p;
-import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:patient/authentication/login/login_screen_view_model.dart';
 import 'package:patient/model/chat_model.dart';
 import 'package:patient/model/message_model.dart';
 import 'package:patient/model/my_user.dart';
@@ -48,6 +49,12 @@ class _PrivateChatState extends State<PrivateChat> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop(ChatScreenPatient.routeName);
+                },
+                icon: Icon(LineAwesomeIcons.angle_left,
+                    color: MyTheme.whiteColor)),
             title: Text(widget.chatuser.hospitalName!,
                 style: TextStyle(color: MyTheme.whiteColor)),
             centerTitle: true,

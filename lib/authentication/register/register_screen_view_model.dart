@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
 import 'package:patient/authentication/register/register_navigator.dart';
 import 'package:patient/authentication/register/register_screen.dart';
 import 'package:patient/patient_screens/homeScreen_patient.dart';
-import 'package:path/path.dart' as p;
+
 import '../../dialog_utils.dart';
 import '../../firebase_utils.dart';
 import '../../methods/common_methods.dart';
@@ -14,7 +15,6 @@ import '../../model/my_user.dart';
 
 class RegisterScreenViewModel extends ChangeNotifier {
   static User? userSignUp;
-
   var emailController = TextEditingController(text: 'ahmed.mohamed7@gmail.com');
   var passwordController = TextEditingController(text: '123456');
   var nameController = TextEditingController(text: 'ahmed');

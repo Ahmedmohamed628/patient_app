@@ -36,23 +36,48 @@ class DialogUtils {
       bool barrierDismissible = true}) {
     List<Widget> actions = [];
     if (posActionName != null) {
-      actions.add(TextButton(
+      actions.add(
+        ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
             posAction?.call();
           },
-          child: Text(
-            posActionName,
-            style: TextStyle(fontSize: 17),
-          )));
+          child: Text(posActionName,
+              style: TextStyle(fontSize: 17, color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: MyTheme.tabColor,
+              padding: EdgeInsets.symmetric(vertical: 10)),
+        ),
+        // TextButton(
+        // onPressed: () {
+        //   Navigator.pop(context);
+        //   posAction?.call();
+        // },
+        // child: Text(
+        //   posActionName,
+        //   style: TextStyle(fontSize: 17),
+        // )
+        // )
+      );
     }
     if (negActionName != null) {
-      actions.add(TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-            negAction?.call();
-          },
-          child: Text(negActionName)));
+      actions.add(ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+          negAction?.call();
+        },
+        child: Text(negActionName,
+            style: TextStyle(fontSize: 17, color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(vertical: 10)),
+      ));
+      // TextButton(
+      // onPressed: () {
+      //   Navigator.pop(context);
+      //   negAction?.call();
+      // },
+      // child: Text(negActionName, style: TextStyle(fontSize: 17),)));
     }
     showDialog(
         barrierDismissible: barrierDismissible,

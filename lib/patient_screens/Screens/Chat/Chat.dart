@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:patient/authentication/login/login_screen_view_model.dart';
 import 'package:patient/model/chat_model.dart';
 import 'package:patient/model/message_model.dart';
 import 'package:patient/model/my_user.dart';
@@ -10,9 +9,14 @@ import 'package:patient/patient_screens/Screens/Chat/private_chat.dart';
 
 import '../../../theme/theme.dart';
 
-class ChatScreenPatient extends StatelessWidget {
+class ChatScreenPatient extends StatefulWidget {
   static const String routeName = 'Chat-screen-patient';
 
+  @override
+  State<ChatScreenPatient> createState() => _ChatScreenPatientState();
+}
+
+class _ChatScreenPatientState extends State<ChatScreenPatient> {
   @override
   Widget build(BuildContext context) {
     // return FutureBuilder<QuerySnapshot>(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/my_user.dart';
@@ -19,6 +21,23 @@ class FirebaseUtils {
   static Future<MyUser?> readUserFromFireStore(String uId) async {
     var docSnapshot = await getUsersCollection().doc(uId).get();
     return docSnapshot.data();
+  }
+
+  // todo : mn el video>>>>>>>>>>>>>>>>>>
+  // fetch users details:
+  // Future<MyUser> getUserDetails(String email) async{
+  //   final snapshot = await FirebaseFirestore.instance.collection(MyUser.collectionName).where('Email', isEqualTo: email).get();
+  //   final userData = snapshot.docs.map((e) => MyUser.fromSnapshot(e)).single;
+  //   return userData;
+  //
+  //
+  // }
+
+  static Future<void> updateUserRecords(MyUser myUser) async {
+    await FirebaseFirestore.instance
+        .collection(MyUser.collectionName)
+        .doc(myUser.id)
+        .update(myUser.toFireStore());
   }
 
   // todo: da goz2 el patient

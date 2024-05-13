@@ -6,6 +6,7 @@ import 'package:patient/patient_screens/Screens/Hisorty/History.dart';
 import 'package:patient/patient_screens/Screens/Medications/Medications.dart';
 import 'package:patient/patient_screens/Screens/Root/Root.dart';
 import 'package:patient/patient_screens/Screens/Settings/Settings.dart';
+import 'package:patient/patient_screens/Screens/Settings/update_ptofile.dart';
 import 'package:patient/patient_screens/homeScreen_patient.dart';
 import 'package:patient/patient_screens/screen_patient_registeration.dart';
 import 'package:patient/splash_screen/splash_screen.dart';
@@ -40,13 +41,14 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
         RootScreen.routeName: (context) => RootScreen(),
-        SettingsScreen.routeName: (context) => SettingsScreen(),
+        ProfileScreen.routeName: (context) => ProfileScreen(),
         HistoryScreenPatient.routeName: (context) => HistoryScreenPatient(),
         ChatScreenPatient.routeName: (context) => ChatScreenPatient(),
         MedicationScreen.routeName: (context) => MedicationScreen(),
         HomeScreenPatient.routeName: (context) => HomeScreenPatient(),
         ScreenPatientRegisteration.routeName: (context) =>
             ScreenPatientRegisteration(),
+        UpdateProfileScreen.routeName: (context) => UpdateProfileScreen(),
       },
     );
   }
