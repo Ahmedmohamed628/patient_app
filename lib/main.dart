@@ -48,7 +48,8 @@ class MyApp extends StatelessWidget {
         HomeScreenPatient.routeName: (context) => HomeScreenPatient(),
         ScreenPatientRegisteration.routeName: (context) =>
             ScreenPatientRegisteration(),
-        UpdateProfileScreen.routeName: (context) => UpdateProfileScreen(),
+        // UpdateProfileScreen.routeName: (context) => UpdateProfileScreen(),
+        ProfilePage.routeName: (context) => ProfilePage(),
       },
     );
   }

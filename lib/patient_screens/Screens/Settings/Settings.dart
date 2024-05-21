@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:patient/authentication/login/login_screen.dart';
 import 'package:patient/dialog_utils.dart';
+import 'package:patient/model/my_user.dart';
 import 'package:patient/patient_screens/Screens/Settings/update_ptofile.dart';
 
 import '../../../authentication/register/register_navigator.dart';
@@ -19,13 +23,28 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   CommonMethods cMethods = CommonMethods();
   late RegisterNavigator navigator;
-
+  final userCurrent = FirebaseAuth.instance.currentUser;
+  MyUser? userdata;
+  String? userpfp;
   // sign out function
   Future<void> _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context)
         .pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LoginScreen()),
             (route) => false));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    userdata = await getUserDetails(userCurrent!.uid);
+    userpfp = userdata!.pfpURL;
+    setState(() {}); // Update the state after fetching the data
   }
 
   @override
@@ -44,16 +63,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               Stack(children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image(
-                      image: AssetImage('assets/images/user.jpg'),
-                    ),
-                  ),
-                ),
+                CircleAvatar(
+                    radius: MediaQuery.of(context).size.width * 0.2,
+                    child: ClipOval(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        child: userpfp != null
+                            ? Image.network(userpfp!, fit: BoxFit.cover)
+                            : Image.asset('assets/images/user.jpg',
+                                fit: BoxFit.cover),
+                      ),
+                    )
+                    // backgroundImage: selectedImage != null
+                    //     ? FileImage(selectedImage!)
+                    //     : AssetImage('assets/images/user.jpg')
+                    //         as ImageProvider,
+                    )
+                // SizedBox(
+                //   width: MediaQuery.of(context).size.width * 0.3,
+                //   height: MediaQuery.of(context).size.height * 0.15,
+                //   child: ClipRRect(
+                //     borderRadius: BorderRadius.circular(100),
+                //     child: Image(
+                //       image: AssetImage('assets/images/user.jpg'),
+                //     ),
+                //   ),
+                // ),,
+                ,
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -69,16 +106,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ]),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              Text('Ahmed Mohamed',
+              Text(userdata != null ? userdata!.name.toString() : "",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              Text('ahmed.mohamed7patient@gmail.com',
+              Text(userdata != null ? userdata!.email.toString() : "",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
               SizedBox(height: MediaQuery.of(context).size.height * 0.025),
               SizedBox(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(UpdateProfileScreen.routeName);
+                    // Navigator.of(context)
+                    //     .pushNamed(UpdateProfileScreen.routeName);
+                    Navigator.of(context).pushNamed(ProfilePage.routeName);
                   },
                   child: Text('Edit profile',
                       style: TextStyle(
@@ -184,5 +222,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<MyUser?> fetchUserFromFirestore(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection(MyUser.collectionName)
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        return MyUser.fromFireStore(userDoc.data() as Map<String, dynamic>);
+      } else {
+        print('User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    }
+  }
+
+  Future<MyUser?> getUserDetails(String id) async {
+    var usersnapshot = await FirebaseFirestore.instance
+        .collection(MyUser.collectionName)
+        .withConverter(
+            fromFirestore: (snapshot, options) =>
+                MyUser.fromFireStore(snapshot.data()!),
+            toFirestore: (user, options) => user.toFireStore())
+        .where("id", isEqualTo: id)
+        .get();
+    print(usersnapshot);
+
+    // Correctly map each document snapshot to a MyUser object
+    var userdata = usersnapshot.docs
+        .map((doc) => MyUser.fromFireStore(doc.data().toFireStore()));
+
+    return userdata.single;
   }
 }

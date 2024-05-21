@@ -1,5 +1,3 @@
-
-
 class MyUser {
   static const String collectionName = 'patients';
   String? id;
@@ -28,23 +26,6 @@ class MyUser {
       required this.age,
       required this.gender,
       required this.pfpURL});
-
-  // factory MyUser.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
-  //   final data = document.data()!;
-  //   return MyUser(
-  //       id: document.id,
-  //       phoneNumber: data['phoneNumber'],
-  //       address: data['address'],
-  //       name: data['name'],
-  //       email: data['email'],
-  //       nationalId: data['nationalId'],
-  //       chronicDiseases: data['chronicDiseases'],
-  //       height: data['height'],
-  //       weight: data['weight'],
-  //       age: data['age'],
-  //       gender: data['gender'],
-  //       pfpURL: data['pfpURL']);
-  // }
 
   MyUser.fromFireStore(Map<String, dynamic> data)
       : this(
