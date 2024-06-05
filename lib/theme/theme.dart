@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyTheme {
@@ -9,6 +8,7 @@ class MyTheme {
   static Color whiteColor = Color(0xffffffff);
   static Color blackColor = Color(0xff000000);
   static Color grayColor = Color(0xff562929);
+  static Color primaryDark = Color(0xff3b5998);
 
   /// colors chat
   static const backgroundColor = Color.fromRGBO(19, 28, 33, 1);
@@ -55,6 +55,24 @@ class MyTheme {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: redColor,
         shape: StadiumBorder(side: BorderSide(color: whiteColor, width: 4))),
+  );
+
+  static ThemeData darkTheme = ThemeData(
+    //canvasColor: primaryLight,
+    primaryColor: primaryDark,
+    scaffoldBackgroundColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      backgroundColor: primaryDark,
+      // color: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: primaryDark,
+        showSelectedLabels: true,
+        selectedItemColor: whiteColor,
+        unselectedItemColor: grayColor,
+        showUnselectedLabels: true),
   );
 
   static final light = ThemeData(

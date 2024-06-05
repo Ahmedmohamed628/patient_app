@@ -54,8 +54,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   lottie: ^2.7.0
   health: ^8.1.0
-  permission_handler: ^11.1.0
-  http: ^1.2.0
+  permission_handler: ^11.3.1
+  http: ^1.2.1
   provider: ^6.1.1
   flutter_bloc: ^8.1.4
   cloud_firestore: ^4.17.2
@@ -69,6 +69,11 @@ dependencies:
   path: ^1.9.0
   line_awesome_flutter: ^2.0.0
   shared_preferences: ^2.2.3
+  location: ^6.0.2
+  flutter_slidable: ^3.1.0
+  google_maps_flutter: ^2.6.1
+  geolocator: ^12.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +100,7 @@ flutter:
     - assets/images/
     - assets/
     - assets/icons/
+  #    - theme/
 
 
   # To add assets to your application, add an assets section, like this:

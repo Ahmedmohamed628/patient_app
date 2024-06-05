@@ -1,14 +1,18 @@
 // import 'dart:html';
-
 import 'dart:io';
-import 'package:path/path.dart' as p;
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:path/path.dart' as p;
 import 'package:patient/authentication/component/custom_text_form_field.dart';
 import 'package:patient/model/my_user.dart';
+
+import '../../../methods/common_methods.dart';
+import '../../../theme/theme.dart';
 
 ///////////////////////////// //////////////////////
 
@@ -21,6 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  CommonMethods cMethods = CommonMethods();
   final _formKey = GlobalKey<FormState>();
   MyUser? _user;
   final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -207,15 +212,20 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: _saveForm,
-          ),
-        ],
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(LineAwesomeIcons.angle_left)),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.save),
+        //     onPressed: _saveForm,
+        //   ),
+        // ],
       ),
       body: _user == null
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: MyTheme.redColor))
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -233,19 +243,37 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                       child: CircleAvatar(
                         radius: MediaQuery.of(context).size.width * 0.2,
-                        child: ClipOval(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.width * 0.4,
-                            child: ProfilePage.selectedImage != null
-                                ? Image.file(ProfilePage.selectedImage!,
-                                    fit: BoxFit.cover)
-                                : _user!.pfpURL != null
-                                    ? Image.network(_user!.pfpURL!,
+                        child: Stack(
+                          children: [
+                            ClipOval(
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height: MediaQuery.of(context).size.width * 0.4,
+                                child: ProfilePage.selectedImage != null
+                                    ? Image.file(ProfilePage.selectedImage!,
                                         fit: BoxFit.cover)
-                                    : Image.asset('assets/images/user.jpg',
-                                        fit: BoxFit.cover),
-                          ),
+                                    : _user!.pfpURL != null
+                                        ? Image.network(_user!.pfpURL!,
+                                            fit: BoxFit.cover)
+                                        : Image.asset('assets/images/user.jpg',
+                                            fit: BoxFit.cover),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.04,
+                                width: MediaQuery.of(context).size.width * 0.08,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: MyTheme.redColor),
+                                child: Icon(LineAwesomeIcons.alternate_pencil,
+                                    color: Colors.white, size: 20),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -367,10 +395,97 @@ class _ProfilePageState extends State<ProfilePage> {
                         return null;
                       },
                     ),
-                    ElevatedButton(
-                      onPressed: _changePassword,
-                      child: Text('Change Password'),
+                    //change password
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 3),
+                      child: ElevatedButton(
+                        onPressed: _changePassword,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.change_circle,
+                                color: MyTheme.whiteColor,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              Text('Change Password',
+                                  style: TextStyle(
+                                      color: MyTheme.whiteColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15)),
+                            ]),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: MyTheme.messageColor,
+                            padding: EdgeInsets.symmetric(vertical: 10)),
+                        // Text('Change Password'),
+                      ),
                     ),
+                    //confirm changes
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 3),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _saveForm();
+                        },
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.check_circle, color: Colors.white),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              Text('Confirm changes',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15)),
+                            ]),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: MyTheme.redColor,
+                            padding: EdgeInsets.symmetric(vertical: 10)),
+                      ),
+                    ),
+                    //delete
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       // delete the account
+                    //       DialogUtils.showMessage(context,
+                    //         'Are you sure to delete this account?.',
+                    //         title: 'Delete account',
+                    //         barrierDismissible: false,
+                    //         posActionName: 'yes',
+                    //         posAction: () {
+                    //
+                    //           cMethods.displaySnackBar('Email has been deleted successfully.', context);
+                    //         },
+                    //         negActionName: 'no',
+                    //         negAction: () {},
+                    //       );
+                    //     },
+                    //     child: Row(
+                    //         mainAxisAlignment:
+                    //         MainAxisAlignment.center,
+                    //         children: [
+                    //           Icon(Icons.delete_forever),
+                    //           SizedBox(width: MediaQuery.of(context).size.width *0.02,),
+                    //           Text('Delete this account',
+                    //               style: TextStyle(
+                    //                   color: Colors.white,
+                    //                   fontWeight: FontWeight.w600,
+                    //                   fontSize: 15)),
+                    //         ]),
+                    //     style: ElevatedButton.styleFrom(
+                    //         backgroundColor: MyTheme.searchBarColor,
+                    //         padding:
+                    //         EdgeInsets.symmetric(vertical: 10)),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -1066,11 +1181,6 @@ class _ProfilePageState extends State<ProfilePage> {
 //     },
 //   );
 // }
-
-
-  
-
-
 
 // var snapshots = FirebaseFirestore.instance
 //     .collection(MyUser.collectionName)

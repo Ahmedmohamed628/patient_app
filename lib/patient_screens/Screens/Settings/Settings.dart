@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,9 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:patient/authentication/login/login_screen.dart';
 import 'package:patient/dialog_utils.dart';
 import 'package:patient/model/my_user.dart';
-import 'package:patient/patient_screens/Screens/Settings/update_ptofile.dart';
+import 'package:patient/patient_screens/Screens/Chat/Chat.dart';
+import 'package:patient/patient_screens/Screens/Chat/private_chat.dart';
+import 'package:patient/patient_screens/Screens/Settings/bottom_sheet.dart';
 
 import '../../../authentication/register/register_navigator.dart';
 import '../../../methods/common_methods.dart';
@@ -22,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   CommonMethods cMethods = CommonMethods();
+  bool isSwitched = false;
   late RegisterNavigator navigator;
   final userCurrent = FirebaseAuth.instance.currentUser;
   MyUser? userdata;
@@ -33,6 +34,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             MaterialPageRoute(builder: (context) => LoginScreen()),
             (route) => false));
   }
+
+  final String adminId =
+      "Ramadany1w9FsalmazYuamidowQKLgYrovanaOzDnardeen7tokaG"; // Fixed admin ID
+  MyHospital admin = MyHospital(
+      id: "Ramadany1w9FsalmazYuamidowQKLgYrovanaOzDnardeen7tokaG",
+      email: null,
+      phoneNumber: null,
+      address: null,
+      gender: null,
+      pfpURL: null,
+      hospitalName: "Admin",
+      doctorId: null,
+      doctorName: null,
+      status: null);
 
   @override
   void initState() {
@@ -49,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    // var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyTheme.redColor,
@@ -79,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //     ? FileImage(selectedImage!)
                     //     : AssetImage('assets/images/user.jpg')
                     //         as ImageProvider,
-                    )
+                    ),
                 // SizedBox(
                 //   width: MediaQuery.of(context).size.width * 0.3,
                 //   height: MediaQuery.of(context).size.height * 0.15,
@@ -89,21 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 //       image: AssetImage('assets/images/user.jpg'),
                 //     ),
                 //   ),
-                // ),,
-                ,
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.04,
-                    width: MediaQuery.of(context).size.width * 0.08,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: MyTheme.redColor),
-                    child: Icon(LineAwesomeIcons.alternate_pencil,
-                        color: Colors.white, size: 20),
-                  ),
-                ),
+                // ),
               ]),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               Text(userdata != null ? userdata!.name.toString() : "",
@@ -111,28 +112,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(userdata != null ? userdata!.email.toString() : "",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
               SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigator.of(context)
-                    //     .pushNamed(UpdateProfileScreen.routeName);
-                    Navigator.of(context).pushNamed(ProfilePage.routeName);
-                  },
-                  child: Text('Edit profile',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15)),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: MyTheme.senderMessageColor),
-                ),
-              ),
+              // SizedBox(
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).pushNamed(ProfilePage.routeName);
+              //     },
+              //     child: Text('Edit profile',
+              //         style: TextStyle(
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.w400,
+              //             fontSize: 15)),
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: MyTheme.senderMessageColor),
+              //   ),
+              // ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               const Divider(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               ListTile(
                 tileColor: MyTheme.messageColor.withOpacity(0.1),
-                onTap: () {},
+                onTap: () {
+                  showBottomSheet();
+                },
                 leading: Container(
                   height: MediaQuery.of(context).size.height * 0.06,
                   width: MediaQuery.of(context).size.width * 0.13,
@@ -154,10 +155,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.grey, size: 18),
                 ),
               ),
+///////////////////test
+
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               ListTile(
                 tileColor: MyTheme.messageColor.withOpacity(0.1),
-                onTap: () {},
+                onTap: () {
+                  _contactAdmin();
+                },
+                leading: Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.13,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: MyTheme.redColor.withOpacity(0.1)),
+                  child: Icon(LineAwesomeIcons.envelope),
+                ),
+                title: Text('Contact Admin',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                trailing: Container(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  width: MediaQuery.of(context).size.width * 0.09,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: MyTheme.searchBarColor.withOpacity(0.1)),
+                  child: Icon(LineAwesomeIcons.angle_right,
+                      color: Colors.grey, size: 18),
+                ),
+              ),
+////////////////////test
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              //theme
+              ListTile(
+                tileColor: MyTheme.messageColor.withOpacity(0.1),
+                // onTap: () {},
                 leading: Container(
                   height: MediaQuery.of(context).size.height * 0.06,
                   width: MediaQuery.of(context).size.width * 0.13,
@@ -175,11 +208,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: MyTheme.searchBarColor.withOpacity(0.1)),
-                  child: Icon(LineAwesomeIcons.angle_right,
-                      color: Colors.grey, size: 18),
+                  child: Switch(
+                    activeColor: MyTheme.whiteColor,
+                    activeThumbImage: AssetImage('assets/images/dark_mode.png'),
+                    activeTrackColor: MyTheme.redColor,
+                    inactiveThumbImage:
+                        AssetImage('assets/images/light_mode.png'),
+                    value: isSwitched,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = !isSwitched;
+                      });
+                    },
+                  ),
+                  // Icon(LineAwesomeIcons.angle_right, color: Colors.grey, size: 18),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              //sign out
               ListTile(
                 tileColor: MyTheme.messageColor.withOpacity(0.1),
                 onTap: () {
@@ -259,5 +305,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .map((doc) => MyUser.fromFireStore(doc.data().toFireStore()));
 
     return userdata.single;
+  }
+
+  void showBottomSheet() {
+    showModalBottomSheet(
+        context: context, builder: (context) => BottomSheetSettings()
+        // ElevatedButton(
+        //   onPressed: () {
+        //     Navigator.of(context).pushNamed(ProfilePage.routeName);
+        //   },
+        //   child: Text('Edit profile',
+        //       style: TextStyle(
+        //           color: Colors.white,
+        //           fontWeight: FontWeight.w400,
+        //           fontSize: 15)),
+        //   style: ElevatedButton.styleFrom(
+        //       backgroundColor: MyTheme.senderMessageColor),
+        // )
+
+        );
+  }
+
+  void _contactAdmin() async {
+    final userCurrent = FirebaseAuth.instance.currentUser;
+
+    if (admin.id != null) {
+      final chatExists = await checkChatExists(userCurrent!.uid, adminId);
+      if (!chatExists) {
+        await createNewChat(userCurrent.uid, adminId);
+      }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return PrivateChat(chatuser: admin);
+          },
+        ),
+      );
+    }
   }
 }
