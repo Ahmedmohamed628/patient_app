@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:patient/app_info/app_info.dart';
 import 'package:patient/patient_screens/Screens/Chat/Chat.dart';
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AppInfo(),
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: SplashScreen.routeName,
         //RegisterScreen.routeName //ScreenSelection.routeName
@@ -82,26 +83,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-
-    // return GetMaterialApp(
-    //   debugShowCheckedModeBanner: false,
-    //   initialRoute: SplashScreen.routeName,
-    //   //RegisterScreen.routeName //ScreenSelection.routeName
-    //   routes: {
-    //     SplashScreen.routeName: (context) => SplashScreen(),
-    //     LoginScreen.routeName: (context) => LoginScreen(),
-    //     RegisterScreen.routeName: (context) => RegisterScreen(),
-    //     RootScreen.routeName: (context) => RootScreen(),
-    //     ProfileScreen.routeName: (context) => ProfileScreen(),
-    //     HistoryScreenPatient.routeName: (context) => HistoryScreenPatient(),
-    //     ChatScreenPatient.routeName: (context) => ChatScreenPatient(),
-    //     MedicationScreen.routeName: (context) => MedicationScreen(),
-    //     HomeScreenPatient.routeName: (context) => HomeScreenPatient(),
-    //     ScreenPatientRegisteration.routeName: (context) =>
-    //         ScreenPatientRegisteration(),
-    //     // UpdateProfileScreen.routeName: (context) => UpdateProfileScreen(),
-    //     ProfilePage.routeName: (context) => ProfilePage(),
-    //   },
-    // );
   }
 }
