@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patient/patient_screens/Screens/Medications/ui/home_page.dart';
 
 import '../../../theme/theme.dart';
 
@@ -14,6 +15,7 @@ class MedicationScreen extends StatelessWidget {
         centerTitle: true,
       ),
       backgroundColor: MyTheme.whiteColor,
+      body: const HomePage(),
     );
   }
 }

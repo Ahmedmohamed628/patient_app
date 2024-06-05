@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MyUser {
   static const String collectionName = 'patients';
   String? id;
@@ -12,6 +14,7 @@ class MyUser {
   String? age;
   String? gender;
   String? pfpURL;
+  Timestamp? createdAt;
 
   MyUser(
       {required this.id,
@@ -25,7 +28,8 @@ class MyUser {
       required this.weight,
       required this.age,
       required this.gender,
-      required this.pfpURL});
+      required this.pfpURL,
+      required this.createdAt});
 
   MyUser.fromFireStore(Map<String, dynamic> data)
       : this(
@@ -41,6 +45,7 @@ class MyUser {
           age: data['age'],
           gender: data['gender'],
           pfpURL: data['pfpURL'],
+          createdAt: data['createdAt'],
         );
 
   Map<String, dynamic> toFireStore() {
@@ -56,7 +61,8 @@ class MyUser {
       'weight': weight,
       'age': age,
       'gender': gender,
-      'pfpURL': pfpURL
+      'pfpURL': pfpURL,
+      'sentAt': createdAt
     };
   }
 }

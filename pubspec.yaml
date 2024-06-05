@@ -34,6 +34,23 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  date_picker_timeline: ^1.2.5
+  get_storage: ^2.0.3
+  get: ^4.6.1
+  flutter_local_notifications: ^9.9.1
+  flutter_timezone: ^1.0.8
+  timezone: ^0.8.0
+  flutter_staggered_animations: ^1.0.0
+  intl: ^0.18.1
+  google_fonts: ^6.1.0
+  sqflite: ^2.3.0
+  rxdart: ^0.27.7
+  device_info_plus: ^9.1.0
+  csv: ^5.0.0
+  excel: ^3.0.0
+  pdf: ^3.10.6
+  path_provider: ^2.1.1
+  flutter_file_dialog: ^3.0.2
   cupertino_icons: ^1.0.6
   lottie: ^2.7.0
   health: ^8.1.0
@@ -51,7 +68,6 @@ dependencies:
   image_picker: ^1.1.0
   path: ^1.9.0
   line_awesome_flutter: ^2.0.0
-  flutter_local_notifications: ^17.1.2
   shared_preferences: ^2.2.3
 
 dev_dependencies:
@@ -78,6 +94,7 @@ flutter:
   assets:
     - assets/images/
     - assets/
+    - assets/icons/
 
 
   # To add assets to your application, add an assets section, like this:

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,8 @@ import '../../model/my_user.dart';
 
 class RegisterScreenViewModel extends ChangeNotifier {
   static User? userSignUp;
-  var emailController = TextEditingController(text: 'ahmed.mohamed7@gmail.com');
+  var emailController =
+      TextEditingController(text: 'ahmed.mohamed7patient@gmail.com');
   var passwordController = TextEditingController(text: '123456');
   var nameController = TextEditingController(text: 'ahmed');
   var phoneNumber = TextEditingController(text: '01228384694');
@@ -65,7 +67,8 @@ class RegisterScreenViewModel extends ChangeNotifier {
             weight: weight.text,
             age: age.text,
             gender: gender.text,
-            pfpURL: pfpURL ?? null);
+            pfpURL: pfpURL ?? null,
+            createdAt: Timestamp.now());
 
         // var authProvider = Provider.of<AuthProvider>(context,listen: false);
         // authProvider.updateUser(myUser);
