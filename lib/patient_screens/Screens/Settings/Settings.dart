@@ -7,6 +7,8 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:patient/authentication/login/login_screen.dart';
 import 'package:patient/dialog_utils.dart';
 import 'package:patient/model/my_user.dart';
+import 'package:patient/patient_screens/Screens/Chat/Chat.dart';
+import 'package:patient/patient_screens/Screens/Chat/private_chat.dart';
 import 'package:patient/patient_screens/Screens/Settings/update_ptofile.dart';
 
 import '../../../authentication/register/register_navigator.dart';
@@ -33,6 +35,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             MaterialPageRoute(builder: (context) => LoginScreen()),
             (route) => false));
   }
+
+  final String adminId =
+      "Ramadany1w9FsalmazYuamidowQKLgYrovanaOzDnardeen7tokaG"; // Fixed admin ID
+  MyHospital admin = MyHospital(
+      id: "Ramadany1w9FsalmazYuamidowQKLgYrovanaOzDnardeen7tokaG",
+      email: null,
+      phoneNumber: null,
+      address: null,
+      gender: null,
+      pfpURL: null,
+      hospitalName: "Admin",
+      doctorId: null,
+      doctorName: null,
+      status: null);
 
   @override
   void initState() {
@@ -154,6 +170,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.grey, size: 18),
                 ),
               ),
+///////////////////test
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+              ListTile(
+                tileColor: MyTheme.messageColor.withOpacity(0.1),
+                onTap: () {
+                  _contactAdmin();
+                },
+                leading: Container(
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.13,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: MyTheme.redColor.withOpacity(0.1)),
+                  child: Icon(LineAwesomeIcons.envelope),
+                ),
+                title: Text('Contact Admin',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                trailing: Container(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  width: MediaQuery.of(context).size.width * 0.09,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: MyTheme.searchBarColor.withOpacity(0.1)),
+                  child: Icon(LineAwesomeIcons.angle_right,
+                      color: Colors.grey, size: 18),
+                ),
+              ),
+////////////////////test
+
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               ListTile(
                 tileColor: MyTheme.messageColor.withOpacity(0.1),
@@ -259,5 +306,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .map((doc) => MyUser.fromFireStore(doc.data().toFireStore()));
 
     return userdata.single;
+  }
+
+  void _contactAdmin() async {
+    final userCurrent = FirebaseAuth.instance.currentUser;
+
+    if (admin.id != null) {
+      final chatExists = await checkChatExists(userCurrent!.uid, adminId);
+      if (!chatExists) {
+        await createNewChat(userCurrent.uid, adminId);
+      }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return PrivateChat(chatuser: admin);
+          },
+        ),
+      );
+    }
   }
 }
