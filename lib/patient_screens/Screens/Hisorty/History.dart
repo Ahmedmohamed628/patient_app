@@ -23,7 +23,10 @@ class _HistoryScreenPatientState extends State<HistoryScreenPatient> {
         title: Text('chronic Diseases',
             style: TextStyle(color: MyTheme.whiteColor)),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(
+            Icons.menu,
+            color: MyTheme.whiteColor,
+          ),
           onPressed: () {
             scaffoldKey.currentState?.openDrawer();
           },

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:patient/healthconnectdata.dart';
 import 'package:patient/theme/theme.dart';
 
@@ -85,7 +86,7 @@ class _WatchHistoryState extends State<WatchHistory> {
         title:
             Text('watch History', style: TextStyle(color: MyTheme.whiteColor)),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(LineAwesomeIcons.angle_left, color: MyTheme.whiteColor),
           onPressed: () {
             Navigator.pop(context);
           },

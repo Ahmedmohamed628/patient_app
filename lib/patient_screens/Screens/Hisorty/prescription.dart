@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:patient/model/my_user.dart';
@@ -188,7 +189,7 @@ class _PrescriptionState extends State<Prescription> {
         backgroundColor: MyTheme.redColor,
         title: Text('History', style: TextStyle(color: MyTheme.whiteColor)),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(LineAwesomeIcons.angle_left, color: MyTheme.whiteColor),
           onPressed: () {
             Navigator.pop(context);
           },
