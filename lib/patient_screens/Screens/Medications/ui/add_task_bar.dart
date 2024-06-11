@@ -194,13 +194,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
       child: Column(
         children: [
           MyInputField(
-            title: "Title",
-            hint: "Enter your title",
+            title: "Medicine",
+            hint: "Enter your medicine",
             controller: _titleController,
           ),
           MyInputField(
-            title: "Note",
-            hint: "Enter your note",
+            title: "Medical Note",
+            hint: "Enter your medical ote",
             controller: _noteController,
           ),
           MyInputField(
@@ -322,14 +322,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _colorPallet(),
-              MyButton(
-                label: widget.task == null
-                    ? "Create Medication"
-                    : "Update Medication",
-                onTap: () => _validateData(),
-              ),
             ],
-          )
+          ),
+          MyButton(
+            label:
+                widget.task == null ? "Create Medication" : "Update Medication",
+            onTap: () => _validateData(),
+          ),
         ],
       ),
     );

@@ -47,7 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       hospitalName: "Admin",
       doctorId: null,
       doctorName: null,
-      status: null);
+      status: null,
+      createdAt: null);
 
   @override
   void initState() {
@@ -161,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 tileColor: MyTheme.messageColor.withOpacity(0.1),
                 onTap: () {
-                  _contactAdmin();
+                  contactAdmin();
                 },
                 leading: Container(
                   height: MediaQuery.of(context).size.height * 0.06,
@@ -326,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
   }
 
-  void _contactAdmin() async {
+  void contactAdmin() async {
     final userCurrent = FirebaseAuth.instance.currentUser;
 
     if (admin.id != null) {

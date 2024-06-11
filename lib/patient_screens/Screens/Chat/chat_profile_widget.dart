@@ -22,7 +22,7 @@ class ChatTile extends StatelessWidget {
       leading: CircleAvatar(
         backgroundImage: NetworkImage(user.pfpURL ?? ''),
       ),
-      title: Text(user.hospitalName!),
+      title: Text(user.hospitalName ?? ""),
     );
   }
 }

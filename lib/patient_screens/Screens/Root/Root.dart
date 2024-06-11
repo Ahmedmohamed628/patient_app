@@ -114,13 +114,32 @@ class _RootScreenState extends State<RootScreen> {
 // }
 
 //function: 3shan tgeeb => 1- request gps ... 2- permission el location
-  requestPermission() async {
-    await locationManager.isServiceEnabled();
-    await locationManager.requestService();
-    await Permission.locationWhenInUse.isDenied.then((valueOfPermission) {
-      if (valueOfPermission) {
-        Permission.locationWhenInUse.request();
-      }
-    });
+  // requestPermission() async {
+  //   await locationManager.isServiceEnabled();
+  //   await locationManager.requestService();
+  //   await Permission.locationWhenInUse.isDenied.then((valueOfPermission) {
+  //     if (valueOfPermission) {
+  //       Permission.locationWhenInUse.request();
+  //     }
+  //   });
+  // }
+
+  Future<void> requestPermission() async {
+    bool isLocationServiceEnabled = await locationManager.isServiceEnabled();
+    if (!isLocationServiceEnabled) {
+      await locationManager.requestService();
+    }
+
+    bool isLocationPermissionDenied =
+        await Permission.locationWhenInUse.isDenied;
+    if (isLocationPermissionDenied) {
+      await Permission.locationWhenInUse.request();
+    }
+
+    // bool isNotificationPermissionDenied =
+    //     await Permission.notification.isDenied;
+    // if (isNotificationPermissionDenied) {
+    //   await Permission.notification.request();
+    // }
   }
 }

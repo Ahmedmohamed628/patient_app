@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class NotificationDetailPage extends StatefulWidget {
   final String? label;
@@ -19,7 +20,13 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
       backgroundColor: context.theme.colorScheme.background,
       appBar: _appBar(context, widget.label),
       body: Center(
-        child: Text(widget.label ?? "No Data"),
+        child: Column(
+          children: [
+            Lottie.asset(
+                'assets/images/taking-medicine-4967630-4135498.mp4.lottie.json'),
+            Text(widget.label ?? "No Data"),
+          ],
+        ),
       ),
     );
   }

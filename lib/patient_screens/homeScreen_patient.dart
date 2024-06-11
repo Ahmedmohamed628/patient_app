@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:patient/patient_screens/Screens/Hisorty/History.dart';
+import 'package:patient/patient_screens/Screens/deaf/deaf.dart';
 
 import '../theme/theme.dart';
 import 'Screens/Chat/Chat.dart';
-import 'Screens/Hisorty/History.dart';
 import 'Screens/Medications/Medications.dart';
 import 'Screens/Root/Root.dart';
 import 'Screens/Settings/Settings.dart';
@@ -48,6 +49,8 @@ class _HomeScreenPatientState extends State<HomeScreenPatient> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
+                  icon: Icon(Icons.sign_language, size: 22), label: 'Deaf'),
+              BottomNavigationBarItem(
                   icon: Icon(Icons.history, size: 22), label: 'History'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.person_pin_rounded, size: 22),
@@ -64,6 +67,7 @@ class _HomeScreenPatientState extends State<HomeScreenPatient> {
     ChatScreenPatient(),
     MedicationScreen(),
     RootScreen(),
+    DeafScreenPatient(),
     HistoryScreenPatient(),
     ProfileScreen()
   ];

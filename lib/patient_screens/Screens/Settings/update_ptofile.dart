@@ -35,8 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nationalIdController = TextEditingController();
-  final TextEditingController _chronicDiseasesController =
-      TextEditingController();
+  // final TextEditingController _chronicDiseasesController =
+  //     TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _phoneNumberController.text = _user!.phoneNumber ?? '';
       _addressController.text = _user!.address ?? '';
       _nationalIdController.text = _user!.nationalId ?? '';
-      _chronicDiseasesController.text = _user!.chronicDiseases ?? '';
+      // _chronicDiseasesController.text = _user!.chronicDiseases ?? '';
       _heightController.text = _user!.height ?? '';
       _weightController.text = _user!.weight ?? '';
       _ageController.text = _user!.age ?? '';
@@ -76,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _user!.phoneNumber = _phoneNumberController.text;
         // _user!.address = _addressController.text;
         _user!.nationalId = _nationalIdController.text;
-        _user!.chronicDiseases = _chronicDiseasesController.text;
+        // _user!.chronicDiseases = _chronicDiseasesController.text;
         _user!.height = _heightController.text;
         _user!.weight = _weightController.text;
         _user!.age = _ageController.text;
@@ -345,16 +345,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         return null;
                       },
                     ),
-                    CustomTextFormField(
-                      label: 'Chronic Diseases',
-                      controller: _chronicDiseasesController,
-                      validator: (text) {
-                        if (text == null || text.trim().isEmpty) {
-                          return 'Please enter a Chronic Diseases';
-                        }
-                        return null;
-                      },
-                    ),
+                    // CustomTextFormField(
+                    //   label: 'Chronic Diseases',
+                    //   controller: _chronicDiseasesController,
+                    //   validator: (text) {
+                    //     if (text == null || text.trim().isEmpty) {
+                    //       return 'Please enter a Chronic Diseases';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     CustomTextFormField(
                       label: 'Height',
                       controller: _heightController,

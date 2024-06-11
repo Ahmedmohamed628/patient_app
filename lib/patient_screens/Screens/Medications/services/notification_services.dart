@@ -49,6 +49,7 @@ class NotifyHelper {
         Get.to(() => NotificationDetailPage(
               label: payload,
             ));
+        //when you click on notification what will apear
       } else {
         Get.to(() => NotificationDetailPage(
               label: payload,
@@ -160,6 +161,7 @@ class NotifyHelper {
     String msg;
     msg = "🔴take your medication ${task.title} now⏰.";
 
+    ///// time of when notification will be delayed
     tz.TZDateTime scheduledDate = await _convertTime(hour, minutes);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -249,7 +251,7 @@ class NotifyHelper {
       tz.setLocalLocation(tz.getLocation(timeZone));
     } catch (e) {
       // If the location is not found, set a default location
-      tz.setLocalLocation(tz.getLocation('Asia/Kathmandu'));
+      tz.setLocalLocation(tz.getLocation('Africa/Egypt'));
     }
   }
 }

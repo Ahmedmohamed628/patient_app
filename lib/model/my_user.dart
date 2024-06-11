@@ -8,28 +8,33 @@ class MyUser {
   String? phoneNumber;
   String? address;
   String? nationalId;
-  String? chronicDiseases;
+  List<String>? chronicDiseases;
+  List<String>? WatchHistory;
   String? height;
   String? weight;
   String? age;
   String? gender;
   String? pfpURL;
   Timestamp? createdAt;
+  List<String>? prescription;
 
-  MyUser(
-      {required this.id,
-      required this.phoneNumber,
-      required this.address,
-      required this.name,
-      required this.email,
-      required this.nationalId,
-      required this.chronicDiseases,
-      required this.height,
-      required this.weight,
-      required this.age,
-      required this.gender,
-      required this.pfpURL,
-      required this.createdAt});
+  MyUser({
+    required this.id,
+    required this.phoneNumber,
+    required this.address,
+    required this.name,
+    required this.email,
+    required this.nationalId,
+    required this.chronicDiseases,
+    required this.WatchHistory,
+    required this.height,
+    required this.weight,
+    required this.age,
+    required this.gender,
+    required this.pfpURL,
+    required this.createdAt,
+    required this.prescription,
+  });
 
   MyUser.fromFireStore(Map<String, dynamic> data)
       : this(
@@ -39,13 +44,15 @@ class MyUser {
           email: data['email'],
           name: data['name'],
           nationalId: data['nationalId'],
-          chronicDiseases: data['chronicDiseases'],
+          chronicDiseases: List<String>.from(data['chronicDiseases'] ?? []),
+          WatchHistory: List<String>.from(data['WatchHistory'] ?? []),
           height: data['height'],
           weight: data['weight'],
           age: data['age'],
           gender: data['gender'],
           pfpURL: data['pfpURL'],
           createdAt: data['createdAt'],
+          prescription: List<String>.from(data['prescription'] ?? []),
         );
 
   Map<String, dynamic> toFireStore() {
@@ -57,12 +64,14 @@ class MyUser {
       'email': email,
       'nationalId': nationalId,
       'chronicDiseases': chronicDiseases,
+      'WatchHistory': WatchHistory,
       'height': height,
       'weight': weight,
       'age': age,
       'gender': gender,
       'pfpURL': pfpURL,
-      'sentAt': createdAt
+      'createdAt': createdAt,
+      'prescription': prescription,
     };
   }
 }
@@ -79,19 +88,20 @@ class MyHospital {
   String? gender;
   bool? status;
   String? pfpURL;
+  Timestamp? createdAt;
 
-  MyHospital({
-    required this.id,
-    required this.phoneNumber,
-    required this.address,
-    required this.hospitalName,
-    required this.email,
-    required this.doctorId,
-    required this.doctorName,
-    required this.gender,
-    required this.status,
-    required this.pfpURL,
-  });
+  MyHospital(
+      {required this.id,
+      required this.phoneNumber,
+      required this.address,
+      required this.hospitalName,
+      required this.email,
+      required this.doctorId,
+      required this.doctorName,
+      required this.gender,
+      required this.status,
+      required this.pfpURL,
+      required this.createdAt});
 
   MyHospital.fromFireStore(Map<String, dynamic> data)
       : this(
@@ -105,6 +115,7 @@ class MyHospital {
           gender: data['gender'],
           status: data['status'],
           pfpURL: data['pfpURL'],
+          createdAt: data['createdAt'],
         );
 
   Map<String, dynamic> toFireStore() {
@@ -118,7 +129,8 @@ class MyHospital {
       'doctorName': doctorName,
       'gender': gender,
       'status': status,
-      'pfpURL': pfpURL
+      'pfpURL': pfpURL,
+      'createdAt': createdAt,
     };
   }
 }

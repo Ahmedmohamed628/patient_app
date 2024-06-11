@@ -11,37 +11,37 @@ const Color darkGreyColor = Color(0xff121212);
 const Color darkHeaderColor = Color(0xFF424242);
 const Color greenColor = Colors.green;
 
-class Themes {
-  static final light = ThemeData(
-    brightness: Brightness.light,
-    colorScheme: const ColorScheme.light(
-      background: white,
-      primary: primaryColor,
-    ),
-    // appBarTheme: const AppBarTheme(
-    //   backgroundColor: white,
-    //   elevation: 0,
-    //   iconTheme: IconThemeData(
-    //     color: Colors.black,
-    //   ),
-    // ),
-  );
+// class Themes {
+//   static final light = ThemeData(
+//     brightness: Brightness.light,
+//     colorScheme: const ColorScheme.light(
+//       background: white,
+//       primary: primaryColor,
+//     ),
+//     // appBarTheme: const AppBarTheme(
+//     //   backgroundColor: white,
+//     //   elevation: 0,
+//     //   iconTheme: IconThemeData(
+//     //     color: Colors.black,
+//     //   ),
+//     // ),
+//   );
 
-  static final dark = ThemeData(
-    brightness: Brightness.dark,
-    colorScheme: const ColorScheme.dark(
-      background: darkGreyColor,
-      primary: primaryColor,
-    ),
-    // appBarTheme: const AppBarTheme(
-    //   backgroundColor: darkGreyColor,
-    //   elevation: 0,
-    //   iconTheme: IconThemeData(
-    //     color: Colors.white,
-    //   ),
-    // ),
-  );
-}
+//   static final dark = ThemeData(
+//     brightness: Brightness.dark,
+//     colorScheme: const ColorScheme.dark(
+//       background: darkGreyColor,
+//       primary: primaryColor,
+//     ),
+//     // appBarTheme: const AppBarTheme(
+//     //   backgroundColor: darkGreyColor,
+//     //   elevation: 0,
+//     //   iconTheme: IconThemeData(
+//     //     color: Colors.white,
+//     //   ),
+//     // ),
+//   );
+// }
 
 TextStyle get subHeadingStyle {
   return GoogleFonts.lato(

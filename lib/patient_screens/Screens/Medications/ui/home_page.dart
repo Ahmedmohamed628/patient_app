@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     return GetBuilder<ThemeServices>(
       init: ThemeServices(),
       builder: (themeServices) => Scaffold(
-        backgroundColor: context.theme.colorScheme.background,
+        backgroundColor: Colors.white,
         // appBar: _appBar(themeServices),
         body: Column(
           children: [
@@ -122,129 +124,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // AppBar _appBar(ThemeServices themeServices) {
-  //   return AppBar(
-  //     systemOverlayStyle: Get.isDarkMode
-  //         ? SystemUiOverlayStyle.light
-  //         : SystemUiOverlayStyle.dark,
-  //     backgroundColor: context.theme.colorScheme.background,
-  //     elevation: 0,
-  //     leading: GestureDetector(
-  //       onTap: () {
-  //         themeServices.switchTheme();
-  //         notifyHelper.displayNotification(
-  //             title: "Theme Changed",
-  //             body: Get.isDarkMode
-  //                 ? "Light Theme Activated"
-  //                 : "Dark Theme Activated");
-  //         // notifyHelper.scheduledNotification();
-  //       },
-  //       child: themeServices.icon,
-  //     ),
-  //     actions: [
-  //       // const CircleAvatar(
-  //       //   backgroundImage: AssetImage("images/avatar.png"),
-  //       // ),
-  //       InputChip(
-  //         padding: const EdgeInsets.all(0),
-  //         label: Text(
-  //           deviceName ?? "Unknown",
-  //           style: GoogleFonts.lato(
-  //             textStyle: const TextStyle(
-  //               fontSize: 16,
-  //               fontWeight: FontWeight.w600,
-  //               color: Colors.grey,
-  //             ),
-  //           ),
-  //         ),
-  //         onPressed: () {},
-  //       ),
-  //       IconButton(
-  //         padding: const EdgeInsets.all(0),
-  //         onPressed: () {
-  //           setState(() {
-  //             // Sort the taskList when the sort button is pressed
-  //             filterTaskList = _shortNotesByModifiedDate(filterTaskList);
-  //           });
-  //         },
-  //         icon: Container(
-  //           // padding: const EdgeInsets.all(10),
-  //           width: 40,
-  //           height: 40,
-  //           alignment: Alignment.center,
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(10),
-  //             color: Get.isDarkMode
-  //                 ? Colors.grey.shade800.withOpacity(.8)
-  //                 : Colors.grey[300],
-  //           ),
-  //           child: Icon(
-  //             shorted ? Icons.filter_alt : Icons.filter_alt_off_sharp,
-  //             size: 26,
-  //             color: Get.isDarkMode ? Colors.white : Colors.black,
-  //           ),
-  //         ),
-  //       ),
-  //       // Stack(
-  //       //   children: <Widget>[
-  //       //     IconButton(
-  //       //       icon: const Icon(Icons.notifications),
-  //       //       onPressed: () {
-  //       //         Get.to(() => const NotificationPage());
-  //       //       },
-  //       //     ),
-  //       //     const Positioned(
-  //       //       right: 10,
-  //       //       top: 10,
-  //       //       child: Badge(
-  //       //         backgroundColor: Colors.red,
-  //       //         label: Text(
-  //       //           '4',
-  //       //           style: TextStyle(color: Colors.white),
-  //       //         ),
-  //       //       ),
-  //       //     ),
-  //       //   ],
-  //       // ),
-  //       PopupMenuButton<String>(
-  //         offset: const Offset(0, 25),
-  //         // color: Get.isDarkMode ? darkGreyColor : Colors.white,
-  //         icon: const Icon(Icons.more_vert),
-  //         padding: const EdgeInsets.symmetric(horizontal: 0),
-  //         tooltip: "More",
-  //         onSelected: (value) async {
-  //           if (value == "Export to CSV") {
-  //             // Export the taskList to CSV
-  //             await exportTasksToCSV(filterTaskList);
-  //           } else if (value == "Export to Excel") {
-  //             // Export the taskList to Excel
-  //             await exportTasksToExcel(filterTaskList);
-  //           } else if (value == "Save as PDF") {
-  //             // Export the taskList to PDF
-  //             await exportTasksToPDF(filterTaskList);
-  //           }
-  //         },
-  //         itemBuilder: (BuildContext context) {
-  //           return [
-  //             const PopupMenuItem(
-  //               value: "Export to CSV",
-  //               child: Text("Export to CSV"),
-  //             ),
-  //             const PopupMenuItem(
-  //               value: "Export to Excel",
-  //               child: Text("Export to Excel"),
-  //             ),
-  //             const PopupMenuItem(
-  //               value: "Save as PDF",
-  //               child: Text("Save as PDF"),
-  //             ),
-  //           ];
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
-
   _dateBar() {
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 10),
@@ -259,6 +138,7 @@ class _HomePageState extends State<HomePage> {
           // New date selected
           setState(() {
             _selectedDate = date;
+            log(_selectedDate.toString());
           });
         },
         monthTextStyle: GoogleFonts.lato(

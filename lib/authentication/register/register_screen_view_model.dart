@@ -24,7 +24,7 @@ class RegisterScreenViewModel extends ChangeNotifier {
   var address = TextEditingController(text: 'alexandria');
 
   // todo: da le el patient
-  var chronicDiseases = TextEditingController(text: 'corona virus');
+  // var chronicDiseases = TextEditingController(text: 'corona virus');
   var height = TextEditingController(text: '171');
   var weight = TextEditingController(text: '70');
   var age = TextEditingController(text: '23');
@@ -56,19 +56,22 @@ class RegisterScreenViewModel extends ChangeNotifier {
               file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
         }
         MyUser myUser = MyUser(
-            phoneNumber: phoneNumber.text,
-            address: address.text,
-            id: credential.user?.uid ?? '',
-            name: nameController.text,
-            email: emailController.text,
-            nationalId: nationalId.text,
-            chronicDiseases: chronicDiseases.text,
-            height: height.text,
-            weight: weight.text,
-            age: age.text,
-            gender: gender.text,
-            pfpURL: pfpURL ?? null,
-            createdAt: Timestamp.now());
+          phoneNumber: phoneNumber.text,
+          address: address.text,
+          id: credential.user?.uid ?? '',
+          name: nameController.text,
+          email: emailController.text,
+          nationalId: nationalId.text,
+          // chronicDiseases: chronicDiseases.text,
+          height: height.text,
+          weight: weight.text,
+          age: age.text,
+          gender: gender.text,
+          pfpURL: pfpURL ?? null,
+          createdAt: Timestamp.now(),
+          chronicDiseases: null,
+          WatchHistory: null, prescription: null,
+        );
 
         // var authProvider = Provider.of<AuthProvider>(context,listen: false);
         // authProvider.updateUser(myUser);

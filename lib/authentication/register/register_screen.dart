@@ -178,19 +178,19 @@ class _RegisterScreenState extends State<RegisterScreen>
                         isPassword: true,
                       ),
                       // chronic diseases
-                      CustomTextFormField(
-                        prefixIcon:
-                            Icon(Icons.coronavirus, color: MyTheme.redColor),
-                        //lock_outline_sharp
-                        label: 'Chronic Disease',
-                        controller: viewModelRegister.chronicDiseases,
-                        validator: (text) {
-                          if (text == null || text.trim().isEmpty) {
-                            return 'Please enter a Chronic Diseases';
-                          }
-                          return null;
-                        },
-                      ),
+                      // CustomTextFormField(
+                      //   prefixIcon:
+                      //       Icon(Icons.coronavirus, color: MyTheme.redColor),
+                      //   //lock_outline_sharp
+                      //   label: 'Chronic Disease',
+                      //   controller: viewModelRegister.chronicDiseases,
+                      //   validator: (text) {
+                      //     if (text == null || text.trim().isEmpty) {
+                      //       return 'Please enter a Chronic Diseases';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                       //height
                       CustomTextFormField(
                         prefixIcon: Icon(Icons.height, color: MyTheme.redColor),
