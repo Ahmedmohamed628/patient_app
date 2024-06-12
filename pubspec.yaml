@@ -67,11 +67,16 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   shared_preferences: ^2.2.3
   location: ^6.0.2
-  flutter_slidable: ^3.1.0
   google_maps_flutter: ^2.6.1
   geolocator: ^12.0.0
   flutter_pdfview: ^1.3.2
   file_picker: ^8.0.3
+  flutter_polyline_points: ^2.0.0
+  loading_animation_widget: ^1.2.1
+  flutter_geofire: ^2.0.3
+  firebase_database: ^10.5.7
+
+
 
 
 dev_dependencies:

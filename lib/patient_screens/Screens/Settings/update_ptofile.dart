@@ -287,23 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         return null;
                       },
                     ),
-                    // CustomTextFormField(
-                    //   label: 'Email',
-                    //   controller: _emailController,
-                    //   keyboardType: TextInputType.emailAddress,
-                    //   validator: (text) {
-                    //     if (text == null || text.trim().isEmpty) {
-                    //       return 'Please Enter An Email';
-                    //     }
-                    //     bool emailValid = RegExp(
-                    //             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    //         .hasMatch(text);
-                    //     if (!emailValid) {
-                    //       return 'Please Enter Valid Email';
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
+
                     CustomTextFormField(
                       label: 'Phone Number',
                       controller: _phoneNumberController,

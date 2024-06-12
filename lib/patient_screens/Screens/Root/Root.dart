@@ -1,14 +1,10 @@
 import 'dart:async';
-
-// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:location/location.dart';
 import 'package:patient/my_location_manager.dart';
 import 'package:patient/patient_screens/Screens/Root/google_maps.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../../healthconnectmethodes.dart';
 import '../../../theme/theme.dart';
 

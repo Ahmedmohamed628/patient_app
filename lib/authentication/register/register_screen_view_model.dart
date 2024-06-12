@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,7 +7,6 @@ import 'package:path/path.dart' as p;
 import 'package:patient/authentication/register/register_navigator.dart';
 import 'package:patient/authentication/register/register_screen.dart';
 import 'package:patient/patient_screens/homeScreen_patient.dart';
-
 import '../../dialog_utils.dart';
 import '../../firebase_utils.dart';
 import '../../methods/common_methods.dart';

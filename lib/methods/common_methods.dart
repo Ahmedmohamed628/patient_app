@@ -48,6 +48,7 @@ class CommonMethods extends ChangeNotifier {
 
       AddressModel model = AddressModel();
       model.humanReadableAddress = humanReadableAddress;
+      model.placeName = humanReadableAddress;
       model.longitudePosition = position.longitude;
       model.latitudePosition = position.latitude;
       Provider.of<AppInfo>(context, listen: false).updatePickUpLocation(model);

@@ -10,6 +10,7 @@ class DialogUtils {
           return AlertDialog(
             content: Row(
               children: [
+                // LoadingAnimationWidget
                 CircularProgressIndicator(
                   color: MyTheme.redColor,
                 ),
