@@ -7,7 +7,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:patient/patient_screens/Screens/Medications/controllers/device_info.dart';
 import 'package:patient/patient_screens/Screens/Medications/controllers/task.controller.dart';
 import 'package:patient/patient_screens/Screens/Medications/models/task.dart';
 import 'package:patient/patient_screens/Screens/Medications/services/notification_services.dart';
@@ -34,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   var notifyHelper;
   String? deviceName;
   bool shorted = false;
-
+  // setting state for selected date
   DateTime _selectedDate = DateTime.now();
   final _taskController = Get.put(TaskController());
 
@@ -43,12 +42,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     filterTaskList = _taskController.taskList;
-    DeviceInfo deviceInfo = DeviceInfo();
-    deviceInfo.getDeviceName().then((value) {
-      setState(() {
-        deviceName = value;
-      });
-    });
 
     notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
@@ -103,11 +96,15 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                DateFormat("EEE, d MMM yyyy").format(DateTime.now()),
+                DateFormat("EEE, d MMM yyyy").format(_selectedDate),
                 style: subHeadingStyle.copyWith(fontSize: width! * .049),
               ),
               Text(
-                "Today",
+                (_selectedDate.year == DateTime.now().year &&
+                        _selectedDate.month == DateTime.now().month &&
+                        _selectedDate.day == DateTime.now().day)
+                    ? "Today"
+                    : DateFormat("d,EEEEEEEEEEE ").format(_selectedDate),
                 style: headingStyle.copyWith(fontSize: width! * .06),
               )
             ],
@@ -135,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         selectionColor: primaryColor,
         selectedTextColor: Colors.white,
         onDateChange: (date) {
-          // New date selected
+          // selected date in the medication home screen
           setState(() {
             _selectedDate = date;
             log(_selectedDate.toString());
@@ -173,149 +170,122 @@ class _HomePageState extends State<HomePage> {
           itemCount: filterTaskList.length,
           itemBuilder: (_, index) {
             Task task = filterTaskList[filterTaskList.length - 1 - index];
+            log("test task ${task.toJson()}");
+            log("test filterTaskList $filterTaskList");
 
             DateTime date = _parseDateTime(task.startTime.toString());
             var myTime = DateFormat.Hm().format(date);
-
             var remind = DateFormat.Hm()
                 .format(date.subtract(Duration(minutes: task.remind!)));
-
             int mainTaskNotificationId = task.id!.toInt();
             int reminderNotificationId = mainTaskNotificationId + 1;
 
-            if (task.repeat == "Daily") {
-              if (task.remind! > 4) {
-                notifyHelper.remindNotification(
-                  int.parse(remind.toString().split(":")[0]), //hour
-                  int.parse(remind.toString().split(":")[1]), //minute
-                  task,
-                );
-                notifyHelper.cancelNotification(reminderNotificationId);
-              }
-              notifyHelper.scheduledNotification(
-                int.parse(myTime.toString().split(":")[0]), //hour
-                int.parse(myTime.toString().split(":")[1]), //minute
-                task,
-              );
-              notifyHelper.cancelNotification(reminderNotificationId);
+            DateTime selectedDate =
+                _selectedDate; // Assuming _selectedDate is of type DateTime
 
-              // update if daily task is completed to reset it every 11:59 pm is not completed
-              if (DateTime.now().hour == 23 && DateTime.now().minute == 59) {
-                _taskController.markTaskAsCompleted(task.id!, false);
-              }
-
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                  child: FadeInAnimation(
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _showBottomSheet(context, task);
-                          },
-                          onLongPress: () {
-                            HapticFeedback.mediumImpact();
-                            Get.to(
-                              () => AddTaskPage(task: task),
-                            );
-                          },
-                          child: TaskTile(
-                            task,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else if (task.date ==
-                DateFormat('MM/dd/yyyy').format(_selectedDate)) {
-              if (task.remind! > 0) {
-                notifyHelper.remindNotification(
-                  int.parse(remind.toString().split(":")[0]), //hour
-                  int.parse(remind.toString().split(":")[1]), //minute
-                  task,
-                );
-                notifyHelper.cancelNotification(reminderNotificationId);
-              }
-              notifyHelper.scheduledNotification(
-                int.parse(myTime.toString().split(":")[0]), //hour
-                int.parse(myTime.toString().split(":")[1]), //minute
-                task,
-              );
-              notifyHelper.cancelNotification(reminderNotificationId);
-
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                  child: FadeInAnimation(
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _showBottomSheet(context, task);
-                          },
-                          child: TaskTile(
-                            task,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else if (task.repeat == "Weekly" &&
-                DateFormat('EEEE').format(_selectedDate) ==
-                    DateFormat('EEEE').format(DateTime.now())) {
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                  child: FadeInAnimation(
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _showBottomSheet(context, task);
-                          },
-                          child: TaskTile(
-                            task,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else if (task.repeat == "Monthly" &&
-                DateFormat('dd').format(_selectedDate) ==
-                    DateFormat('dd').format(DateTime.now())) {
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                  child: FadeInAnimation(
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            _showBottomSheet(context, task);
-                          },
-                          child: TaskTile(
-                            task,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else {
+            // Check if the task date is on or before the selected date
+            if (DateFormat('MM/dd/yyyy')
+                .parse(task.date!)
+                .isAfter(selectedDate)) {
               return Container();
             }
+
+            // Determine if the task should be displayed based on repeat frequency
+            bool shouldDisplayTask = _shouldDisplayTask(task, selectedDate);
+            if (!shouldDisplayTask) {
+              return Container();
+            }
+
+            // Schedule notifications if applicable
+            if (task.remind! > 0) {
+              notifyHelper.remindNotification(
+                int.parse(remind.split(":")[0]), // hour
+                int.parse(remind.split(":")[1]), // minute
+                task,
+              );
+              notifyHelper.cancelNotification(reminderNotificationId);
+            }
+
+            notifyHelper.scheduledNotification(
+              int.parse(myTime.split(":")[0]), // hour
+              int.parse(myTime.split(":")[1]), // minute
+              task,
+            );
+            notifyHelper.cancelNotification(reminderNotificationId);
+
+            // Update if daily task is completed to reset it every 11:59 pm if not completed
+            if (task.repeat == "Daily" &&
+                DateTime.now().hour == 23 &&
+                DateTime.now().minute == 59) {
+              _taskController.markTaskAsCompleted(task.id!, false);
+            }
+
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              child: SlideAnimation(
+                child: FadeInAnimation(
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _showBottomSheet(context, task);
+                        },
+                        onLongPress: () {
+                          HapticFeedback.mediumImpact();
+                          Get.to(() => AddTaskPage(task: task));
+                        },
+                        child: TaskTile(task),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
           },
         );
       }),
     );
+  }
+
+  bool _shouldDisplayTask(Task task, DateTime selectedDate) {
+    DateTime taskDate = DateFormat('MM/dd/yyyy').parse(task.date!);
+
+    if (task.repeat == "Daily") {
+      return true;
+    } else if (task.repeat == "Weekly" &&
+        DateFormat('EEEE').format(selectedDate) ==
+            DateFormat('EEEE').format(taskDate)) {
+      return true;
+    } else if (task.repeat == "Monthly" &&
+        DateFormat('dd').format(selectedDate) ==
+            DateFormat('dd').format(taskDate)) {
+      return true;
+    } else if (task.repeat == "One time" &&
+        taskDate.isAtSameMomentAs(selectedDate)) {
+      return true;
+    } else if (task.date == DateFormat('MM/dd/yyyy').format(selectedDate)) {
+      return true;
+    }
+    return false;
+  }
+
+  void _scheduleNotifications(
+      String remind, String myTime, int reminderNotificationId, Task task) {
+    if (task.remind! > 0) {
+      notifyHelper.remindNotification(
+        int.parse(remind.split(":")[0]), // hour
+        int.parse(remind.split(":")[1]), // minute
+        task,
+      );
+      notifyHelper.cancelNotification(reminderNotificationId);
+    }
+
+    notifyHelper.scheduledNotification(
+      int.parse(myTime.split(":")[0]), // hour
+      int.parse(myTime.split(":")[1]), // minute
+      task,
+    );
+    notifyHelper.cancelNotification(reminderNotificationId);
   }
 
   DateTime _parseDateTime(String timeString) {

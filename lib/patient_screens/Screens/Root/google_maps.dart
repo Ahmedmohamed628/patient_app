@@ -372,8 +372,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     Map dataMap = {
       "tripID": tripRequestRef!.key,
       "publishDateTime": DateTime.now().toString(),
-      "userName": _user!.name,
-      "userPhone": _user!.phoneNumber,
+      "userName": FirebaseAuth.instance.currentUser!.displayName,
+      "userPhone": FirebaseAuth.instance.currentUser!.phoneNumber,
       "userID": FirebaseAuth.instance.currentUser!.uid,
       "pickUpLatLng": pickUpCoOrdinatesMap,
       "destinationLatLng": dropOffDestinationCoOrdinatesMap,

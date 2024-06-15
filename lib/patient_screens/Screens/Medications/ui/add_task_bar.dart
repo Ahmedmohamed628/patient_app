@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:patient/patient_screens/Screens/Medications/controllers/device_info.dart';
 import 'package:patient/patient_screens/Screens/Medications/controllers/task.controller.dart';
 import 'package:patient/patient_screens/Screens/Medications/models/task.dart';
 import 'package:patient/patient_screens/Screens/Medications/theme/theme.dart';
@@ -36,8 +35,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   int _selectedRemind = 0;
   List<int> remindList = [0, 5, 10, 15, 20, 25, 30];
 
-  String _selectedRepeat = "None";
-  List<String> repeatList = ["None", "Daily", "Weekly", "Monthly"];
+  String _selectedRepeat = "Daily";
+  List<String> repeatList = ["Daily", "Weekly", "Monthly", "One time"];
 
   int _selectedColor = 0;
 
@@ -55,13 +54,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
       _selectedRepeat = widget.task!.repeat!;
       _selectedColor = widget.task!.color!;
     }
-
-    DeviceInfo deviceInfo = DeviceInfo();
-    deviceInfo.getDeviceName().then((value) {
-      setState(() {
-        deviceName = value;
-      });
-    });
   }
 
   @override
@@ -101,26 +93,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      actions: [
-        // const CircleAvatar(
-        //   backgroundImage: AssetImage("images/avatar.png"),
-        // ),
-        InputChip(
-          padding: const EdgeInsets.all(0),
-          label: Text(
-            deviceName ?? "Unknown",
-            style: subTitleStyle,
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.more_vert,
-            size: 20,
-            color: Get.isDarkMode ? Colors.white : Colors.black,
-          ),
-        ),
-      ],
+      actions: [],
     );
   }
 
@@ -200,7 +173,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
           MyInputField(
             title: "Medical Note",
-            hint: "Enter your medical ote",
+            hint: "Enter your Medical note",
             controller: _noteController,
           ),
           MyInputField(
@@ -324,6 +297,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
               _colorPallet(),
             ],
           ),
+          SizedBox(
+            height: 20,
+          ),
           MyButton(
             label:
                 widget.task == null ? "Create Medication" : "Update Medication",
@@ -360,7 +336,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Color",
+          "Medicine type",
           style: titleStyle,
         ),
         Wrap(
@@ -401,8 +377,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               : index == 2
                                   ? 'assets/icons/syringe-outline.png'
                                   : 'assets/icons/syrup.png',
-                      width: 45,
-                      height: 45,
+                      width: 91,
+                      height: 91,
                     ),
                   ],
                 ),

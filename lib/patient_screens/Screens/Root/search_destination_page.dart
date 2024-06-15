@@ -60,7 +60,7 @@ class _SearchDestinationPageState extends State<SearchDestinationPage> {
             Card(
               elevation: 10,
               child: Container(
-                height: 230,
+                height: 240,
                 decoration: BoxDecoration(
                   color: MyTheme.redColor,
                   boxShadow: [
