@@ -10,16 +10,16 @@ import 'package:patient/patient_screens/Screens/Medications/ui/widgets/input_fie
 
 class AddTaskPage extends StatefulWidget {
   final Task? task;
+  final String selectedRepeat;
 
-  const AddTaskPage({Key? key, this.task}) : super(key: key);
+  const AddTaskPage({Key? key, this.task, this.selectedRepeat = 'Daily'})
+      : super(key: key);
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-  String? deviceName;
-
   final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
@@ -35,7 +35,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   int _selectedRemind = 0;
   List<int> remindList = [0, 5, 10, 15, 20, 25, 30];
 
-  String _selectedRepeat = "Daily";
+  late String selectedRepeat = widget.selectedRepeat;
   List<String> repeatList = ["Daily", "Weekly", "Monthly", "One time"];
 
   int _selectedColor = 0;
@@ -51,7 +51,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       _startTime = widget.task!.startTime!;
       _endTime = widget.task!.endTime!;
       _selectedRemind = widget.task!.remind!;
-      _selectedRepeat = widget.task!.repeat!;
+      selectedRepeat = widget.task!.repeat!;
       _selectedColor = widget.task!.color!;
     }
   }
@@ -260,7 +260,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
           MyInputField(
             title: "Repeat",
-            hint: _selectedRepeat,
+            hint: selectedRepeat,
             widget: DropdownButton(
               icon: const Icon(
                 Icons.keyboard_arrow_down,
@@ -276,7 +276,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  _selectedRepeat = newValue!;
+                  selectedRepeat = newValue!;
                 });
               },
               items: repeatList.map<DropdownMenuItem<String>>((String value) {
@@ -399,7 +399,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       startTime: _startTime,
       endTime: _endTime,
       remind: _selectedRemind,
-      repeat: _selectedRepeat,
+      repeat: selectedRepeat,
       color: _selectedColor,
       isCompleted: widget.task?.isCompleted ?? 0,
       createdAt:

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:patient/authentication/component/custom_text_form_field.dart';
 import 'package:patient/theme/theme.dart';
 
@@ -134,18 +135,6 @@ class _ChronicDiseasState extends State<ChronicDiseas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: widget.scaffoldKey,
-      // appBar: AppBar(
-      //   backgroundColor: MyTheme.redColor,
-      //   title: Text('History', style: TextStyle(color: MyTheme.whiteColor)),
-      //   leading: IconButton(
-      //     icon: Icon(Icons.menu),
-      //     onPressed: () {
-      //       widget.scaffoldKey.currentState?.openDrawer();
-      //     },
-      //   ),
-      //   centerTitle: true,
-      // ),
       backgroundColor: MyTheme.whiteColor,
       body: Column(
         children: [
@@ -170,7 +159,22 @@ class _ChronicDiseasState extends State<ChronicDiseas> {
             ),
           ),
           _diseases.isEmpty
-              ? Text('No diseases added')
+              ? Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          "No Chronic Disease",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      Center(
+                        child: Lottie.asset('assets/images/chronic.json'),
+                      ),
+                    ],
+                  ),
+                )
               : Expanded(
                   child: ListView.builder(
                     itemCount: _diseases.length,

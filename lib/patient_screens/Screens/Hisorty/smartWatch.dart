@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:patient/healthconnectdata.dart';
 import 'package:patient/theme/theme.dart';
 
@@ -99,7 +100,23 @@ class _WatchHistoryState extends State<WatchHistory> {
           _isLoading
               ? Center(child: CircularProgressIndicator())
               : _healthDataList.isEmpty
-                  ? Center(child: Text('No data available'))
+                  ? Container(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(60.0),
+                            child: Text(
+                              "No smart watch connected or you didnt give premisson",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Center(
+                            child:
+                                Lottie.asset('assets/images/smartwatch2.json'),
+                          ),
+                        ],
+                      ),
+                    )
                   : Expanded(
                       child: ListView.builder(
                         itemCount: _healthDataList.length,

@@ -1,18 +1,19 @@
 import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:http/http.dart' as http;
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:patient/model/my_user.dart';
 import 'package:patient/theme/theme.dart';
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
 
 class Prescription extends StatefulWidget {
   @override
@@ -20,19 +21,23 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
-  List<File> _selectedFiles = [];
-  List<bool> _isPDF = [];
-  List<String> _fileUrls = []; // Added to track file URLs
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final userCurrent = FirebaseAuth.instance.currentUser;
+  List<File> _selectedFiles = []; // List to store selected files
+  List<bool> _isPDF = []; // List to store whether each file is a PDF
+  List<String> _fileUrls = []; // List to store URLs of files
+  final FirebaseStorage _storage =
+      FirebaseStorage.instance; // Firebase Storage instance
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Firestore instance
+  final userCurrent = FirebaseAuth.instance.currentUser; // Current user
+  bool _isLoading = true; // Flag to indicate if files are being loaded
 
   @override
   void initState() {
     super.initState();
-    _initializeFiles();
+    _initializeFiles(); // Initialize files on startup
   }
 
+  // Initialize files by fetching URLs from Firestore and downloading them
   Future<void> _initializeFiles() async {
     try {
       log('Initializing files...');
@@ -51,9 +56,14 @@ class _PrescriptionState extends State<Prescription> {
       }
     } catch (e) {
       log('Error initializing files: $e');
+    } finally {
+      setState(() {
+        _isLoading = false; // Set loading to false after initialization
+      });
     }
   }
 
+  // Pick a file using FilePicker and upload it to Firebase
   Future<void> _pickFile() async {
     try {
       log('Picking file...');
@@ -84,6 +94,7 @@ class _PrescriptionState extends State<Prescription> {
     }
   }
 
+  // Upload file to Firebase Storage and return the download URL
   Future<String> _uploadFile(File file) async {
     try {
       String fileName =
@@ -99,6 +110,7 @@ class _PrescriptionState extends State<Prescription> {
     }
   }
 
+  // Save file URL to Firestore under the current user's document
   Future<void> _saveFileUrl(String fileUrl) async {
     try {
       if (fileUrl.isNotEmpty) {
@@ -115,6 +127,7 @@ class _PrescriptionState extends State<Prescription> {
     }
   }
 
+  // Get list of file URLs from Firestore for the current user
   Future<List<String>> _getUserFiles() async {
     try {
       log('Fetching user files from Firestore...');
@@ -133,10 +146,10 @@ class _PrescriptionState extends State<Prescription> {
     }
   }
 
+  // Download file from a given URL and save it to a temporary directory
   Future<File> _downloadFile(String url, bool isPDF) async {
     try {
       final directory = await getTemporaryDirectory();
-      // Extract filename without query parameters
       final filename = path.basename(Uri.parse(url).path);
       final filePath = path.join(directory.path, filename);
       log('Temporary file path: $filePath');
@@ -156,6 +169,7 @@ class _PrescriptionState extends State<Prescription> {
     }
   }
 
+  // Delete a file from both Firebase Storage and Firestore
   Future<void> _deleteFile(int index) async {
     try {
       String fileUrl = _fileUrls[index];
@@ -201,69 +215,95 @@ class _PrescriptionState extends State<Prescription> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: _pickFile,
-                child: Text('Add PDF/Image'),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: ElevatedButton(
+                  onPressed: _pickFile,
+                  child: Text('Add PDF/Image'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: MyTheme.whiteColor,
+                    backgroundColor: MyTheme.redColor, // Text color
+                  ),
+                ),
               ),
               SizedBox(width: 20),
             ],
           ),
           Expanded(
-            child: _selectedFiles.isEmpty
+            child: _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: _selectedFiles.length,
-                    itemBuilder: (context, index) {
-                      bool isPDF = _isPDF[index];
-                      File file = _selectedFiles[index];
-
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
+                : _selectedFiles.isEmpty
+                    ? Container(
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: isPDF
-                                  ? Container(
-                                      height: 400,
-                                      child: PDFView(
-                                        filePath: file.path,
-                                        enableSwipe: true,
-                                        swipeHorizontal: true,
-                                        autoSpacing: false,
-                                        pageFling: false,
-                                        onRender: (_pages) {
-                                          setState(() {});
-                                        },
-                                        onError: (error) {
-                                          log(error.toString());
-                                        },
-                                        onPageError: (page, error) {
-                                          log('$page: ${error.toString()}');
-                                        },
-                                      ),
-                                    )
-                                  : Image.file(
-                                      file,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Text(
-                                          'Failed to load image',
-                                          style: TextStyle(color: Colors.red),
-                                        );
-                                      },
-                                    ),
+                            Padding(
+                              padding: const EdgeInsets.all(60.0),
+                              child: Text(
+                                "No previous prescription added",
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                _deleteFile(index);
-                              },
+                            Center(
+                              child: Lottie.asset(
+                                  'assets/images/prescription3.json'),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
+                    : ListView.builder(
+                        itemCount: _selectedFiles.length,
+                        itemBuilder: (context, index) {
+                          bool isPDF = _isPDF[index];
+                          File file = _selectedFiles[index];
+
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: isPDF
+                                      ? Container(
+                                          height: 400,
+                                          child: PDFView(
+                                            filePath: file.path,
+                                            enableSwipe: true,
+                                            swipeHorizontal: true,
+                                            autoSpacing: false,
+                                            pageFling: false,
+                                            onRender: (_pages) {
+                                              setState(() {});
+                                            },
+                                            onError: (error) {
+                                              log(error.toString());
+                                            },
+                                            onPageError: (page, error) {
+                                              log('$page: ${error.toString()}');
+                                            },
+                                          ),
+                                        )
+                                      : Image.file(
+                                          file,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Text(
+                                              'Failed to load image',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            );
+                                          },
+                                        ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    _deleteFile(index);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
           ),
         ],
       ),

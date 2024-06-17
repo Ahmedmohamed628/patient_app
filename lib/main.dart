@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -31,18 +32,22 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-      options: FirebaseOptions(
-    apiKey: 'AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI',
-    appId: '1:237732499396:android:fc5cf8ca28138255cfde91',
-    messagingSenderId: 'sendid',
-    projectId: 'emergency-app-da505',
-    storageBucket: 'emergency-app-da505.appspot.com',
-  ));
+    options: FirebaseOptions(
+      apiKey: 'AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI',
+      appId: '1:237732499396:android:fc5cf8ca28138255cfde91',
+      messagingSenderId: 'sendid',
+      projectId: 'emergency-app-da505',
+      storageBucket: 'emergency-app-da505.appspot.com',
+    ),
+  );
   FirebaseFirestore.instance.settings =
       Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
 
   await GetStorage.init();
   await DBHelper.initDb();
+
+  // Initialize cameras
+  await initializeAppAndCameras();
   // WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
   // MyLocationManager locationManager = MyLocationManager();
@@ -53,6 +58,13 @@ Future<void> main() async {
   //     Permission.locationWhenInUse.request();
   //   }
   // });
+}
+
+List<CameraDescription>? cameras;
+
+Future<void> initializeAppAndCameras() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
 }
 
 class MyApp extends StatelessWidget {
