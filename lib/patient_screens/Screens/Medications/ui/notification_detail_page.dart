@@ -29,31 +29,101 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
       body: Center(
         child: Column(
           children: [
-            Lottie.asset('assets/images/taking medicen.json'),
-            Text(
-              "Your medication is ${widget.label.toString().split("|")[0]}",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: Lottie.asset('assets/images/taking medicen.json')),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.03,
             ),
-            Text(
-              "Note that${widget.label.toString().split("|")[1]}",
-              style: TextStyle(
-                fontSize: 16,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(78, 90, 232, 1),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        LineAwesomeIcons.capsules,
+                        color: MyTheme.white,
+                        size: 50,
+                      ),
+                      Text(
+                        "Your medication is: ",
+                        style: TextStyle(
+                          color: MyTheme.white,
+                          fontSize: 25,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "${widget.label.toString().split("|")[0]}",
+                    style: TextStyle(
+                      color: MyTheme.white,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        LineAwesomeIcons.medical_file,
+                        color: MyTheme.white,
+                        size: 50,
+                      ),
+                      Text(
+                        "Your medical note is: ",
+                        style: TextStyle(
+                          color: MyTheme.white,
+                          fontSize: 25,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "${widget.label.toString().split("|")[1]}",
+                    style: TextStyle(
+                      color: MyTheme.white,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        LineAwesomeIcons.clock,
+                        color: MyTheme.white,
+                        size: 50,
+                      ),
+                      Text(
+                        "You should take it at: ",
+                        style: TextStyle(
+                          color: MyTheme.white,
+                          fontSize: 25,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "${widget.label.toString().split("|")[2]}",
+                    style: TextStyle(
+                      color: MyTheme.white,
+                      fontSize: 30,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ],
               ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "You should take it at ${widget.label.toString().split("|")[2]}",
-              style: TextStyle(
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.215,
+              height: MediaQuery.of(context).size.height * 0.03,
             ),
             Text(
               "Have you taken your medication?",
@@ -131,7 +201,7 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
       ),
       // elevation: 0,
       title: Text(
-        "${label.toString().split("|")[0]}",
+        "${label.toString().split("|")[0]} Reminder",
         style: TextStyle(
           color: MyTheme.white,
         ),

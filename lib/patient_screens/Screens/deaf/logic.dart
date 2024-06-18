@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
         leading: IconButton(
           icon: Icon(LineAwesomeIcons.angle_left, color: MyTheme.whiteColor),
           onPressed: () {
-            Tflite.close(); // Ensure Tflite is closed properly
+            // Tflite.close(); // Ensure Tflite is closed properly
             Navigator.pop(context); // Navigate back
           },
         ),

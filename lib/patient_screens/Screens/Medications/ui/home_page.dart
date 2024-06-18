@@ -316,17 +316,18 @@ class _HomePageState extends State<HomePage> {
     Get.bottomSheet(
       Container(
         padding: const EdgeInsets.only(top: 4),
+        width: MediaQuery.of(context).size.width,
         height: task.isCompleted == 1
             ? MediaQuery.of(context).size.height * 0.28
             : MediaQuery.of(context).size.height * 0.35,
-        color: Get.isDarkMode ? darkGreyColor : Colors.white,
+        color: Colors.white,
         child: Column(children: [
           Container(
             height: 6,
             width: 120,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+              color: Colors.grey[300],
             ),
           ),
           const Spacer(),
