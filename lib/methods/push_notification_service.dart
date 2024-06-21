@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:googleapis/admin/directory_v1.dart';
@@ -12,39 +13,43 @@ import 'package:provider/provider.dart';
 class PushNotificationService {
   static Future<String> getAccessToken() async {
     final serviceAccountJson = {
-      {
-        "type": "service_account",
-        "project_id": "emergency-app-da505",
-        "private_key_id": "6539944e68ae5acda406f0cfd38371574d191634",
-        "private_key":
-            "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCl1lem7gUe4taF\nXIXHIq2CyzvxI3dI3gS3qW/0rwi30FpTXg9iqfRfLB2Ne2W8TN4fPnHZPC8brtiG\n2VPqN/C949RXWGaZL+DutI9Coie0RNIX6ZEHBTTKJznX4qouNv6dxn1kZjFazTkR\nNC//pj0VsAG0eV2svSuTJMAGuX1RcRl3VO4Yo7dxTtYZNS09byccY4A5dhgXWOfL\n3IfuY117XZbeGSAv67OdYk1ilqzJCtW1UU1BHdUyB2neG0UPVW9T8AtOQl9ddAeL\nkltU5YltMJ1NuHQPVjFYazFWl2bc+iYzOAi8Ybb1mkFdr+C7Ja68/uprgeRbcvoZ\nqfa13bDFAgMBAAECggEASQO2os4AHimkZqImWldHyqLdeN1zGvd5Xz2wB6x666dF\n5ZevsXJ/n9mGB3FRiRbU4y+0o38OhKM2PST5f9FyYsCpEG3g+kgswhxoSN+pGIMG\ndzXEPzGJHQopOwZWhDN9Zgzqz2X5C+/4VL1D9syD74UHMyUOW8wMH+RZ0Xwgk1bB\nLaOJl4TBVgmGNbhxN1jmOSLsKxake37mTEPIv+0vXOnOzHAQkOZ6zoTt4kEc/+Xl\nKF6REyV64CY/U5O+O06VV2WnyqzuQ84TzHGyr+6aqzUYuBPLDNzH2i7LTwMJH0yI\nPPSfDHPh2CdJ4Qat8UDRATH4pM813yJUc+ZnWZgEnwKBgQDajjcnTo3jI/kjRHEq\n6bI2mItr9Yy0m4xmaW67XnG+k22YvXH3UkjW88fAdVhqbEdpAQbYZzIn+aZHs+g8\ndCaNgwDtSHXj8QmTObP/oTzJORHw5lgAPFjFRo93Mb+hGl/8vJGqavHgTldkn3DV\nRalj9+fzolf0BkxGijpH6I7lowKBgQDCP+tFIcz2y1HfW6a6L3xRpqA2madAO8dh\nEQAC2mz50Cd/xNh/UfwHd0m2lYQST5tjhzWv9tNPKVlYDjdUVECZLjFyppKR7OzX\nnt6cIl8ciYZUzts8mlRriIe8KyFP6LqKVWcmdpE1UFy6hUqTB5bF403JQG7I4Tjb\nfdga72ZmdwKBgFXg/Bsd6vMN95+8DRvnqHd7iY1qd1egp5K2aySE//z6wV37UwTz\n+Fs+f4dIlO18jrLcDGyMYFEE8CnMr7zRhzSj/YE/r9NZq4GGcwxHtzL6keovGPU+\nwUMDbuxPSBVt37nX/wUP8OtK3VxUqmmjbeQyTZqWeCkTMHWnay9GWqAxAoGBAI2s\nvvSqBWrOugUVPJI5BgwrYljQUornzrA+DOsH0kmVhumKcXjTG+V6HFo9zJjqVOQP\nfpm7hT0MZGxz2ej4ljDi3w/G68ngqpFM/wGTlBklOMNsJ7yYtw/DAXS9ZEt662rv\nhQ8plRj0Zt1nUA/SjiYAdgBdrS94DNcRfueOSfpbAoGAY9W2bi9VB3k0JRPUya8A\nZz1YkXn+sjaMKbrIMGrwidVrv7T+bRAbqAiMrQpOg3ki30tWK7Bq1vXNiTaJSW5A\nFTSuO9BGty5CRRcWgtj91P4TReWlzgyWe4io8OdtU4QElJ8tGyrcbMmyPuJHkPC4\nZ7AzK/oEVenTnDxmEN/S3Vs=\n-----END PRIVATE KEY-----\n",
-        "client_email":
-            "ramadona-sendnotification@emergency-app-da505.iam.gserviceaccount.com",
-        "client_id": "110503022026692194869",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url":
-            "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url":
-            "https://www.googleapis.com/robot/v1/metadata/x509/ramadona-sendnotification%40emergency-app-da505.iam.gserviceaccount.com",
-        "universe_domain": "googleapis.com"
-      }
+      "type": "service_account",
+      "project_id": "emergency-app-da505",
+      "private_key_id": "3f0ae61d4207d84106bbefb30984d688846ae36c",
+      "private_key":
+          "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDj2b+gRhzf7WRd\nKcnFC3gyMY1gK0a/DJRe98hsJUgpRBazSjqZJAGhf/bjxCIzH9Apyoj7XjKpCmoy\n8BV2ZnJb46C3C2vxO1aEj5FnnJ6O8rUYypXPiqE9bzx9FT+jL3l/MW7PSbsS+zS8\nS+7+MIynNvtaz0763o8D8gI3NzZW0bq9da8SHrvlYPOPa493W94DkEYGNzWld2Uv\n9ao1XLNGDlXVne5reghp9elX1Czw/1bBJtFl63OXVwG+vz5tboBBt1cz4E3LX+Ug\niMlG03wv+ommUaRwnwXHIrtv8oiih2NRgf23Ol+48OHqGWrTlnoZjv1ILsl74gSF\ntAvmMEkjAgMBAAECggEAAKTc4ORB1vgNs0Q+NA0SaiGjH32x9KlIAfEbreC0bnmx\nn+5v4NRUUtnECk8Y6C6NNCsrFEfegtqI2U69zzApRbfy88XCdWCWyoMxPEBNLG0g\nMGBzAeHc7QFK+1/skRas9mb4Ziy4m5s59UxJgwHPydO8dLxq7rJBVwauc0FNU/uN\nidpZX6ciEUUGaAHH8rSnR2zNDQXThTkZVNAGbXvrP6V3zsc4dvx5gGMYLW9bCK5J\n+W4Hdiu/1vSR5xvjQ1S3Rox55zoO+DmUnBCzlMw5FHC4PzzVi1hIT0F1PpcTe985\nMwkzk6GKnR2I1lWm3bM8r8e1h1IYfrjLWroVzBYlFQKBgQD3lWLUoL0uRrepE5CS\nRSQCy2MtkK54G0js917rCsmknW7b6v7Pm4dBAPyJ0aNy6BiCsFJIdtqscKdU5S0G\n/7mKeSPnWR73HtK+COVK/whUlRXKYGNXNIhmCxNPVoLB5qNqI8HOxfm5ucmQwRPm\nVyxwVAIXnBlKtKWRaxULuDnA9wKBgQDrmKKMfjmJvw64T9T4YJtK03P7Q+eI6HS9\niZcypWtkwv85FLwVc3s/1ra3MnBjvr8iN51bdvN2zU0OLLyvFmQaCrRB93ZkDoPM\nmPt3DH+Kv4SqsZJf96PudUxqgzn1bTI8ikzbj3ia9Db/5JRfpuJ6bipMr2nS92RU\nztSi+h/aNQKBgQC0HsNzC6n2g85UPH6eW5zSR6PU34B+suMAOwucFhITJ9IiPrm4\n0l65JP2VSqYOD9rdIWgLfiSi9aZXNg/nGp6ipnU/d2/2uz74sEIYqKgn2PqsbCl5\npSdijcYzny2r4Z6btn3mb9O5kfeZz04p8tvKsOOAx7kCx5/4xp3eE944iwKBgQCr\nl+dEdqcHub1J5vNR2GMi87H03zdjExP7/JvASpVWtWPYuk5nPU4WaBd6hOUw8Pwb\nOvCEbrXS4KLv4QuoZqGQCh3SMh/rrlq2iPIWembmsqk4/c6D0UV35705ksyDAf5l\n88EY5X1NNvRcGqsqo80uqNBsPBLSkldkIaTj81OBxQKBgGHUDexBfAlqP94TSt7b\n2EYjF7aw7h1X1EA9ESlGem3JF5pmLndeZrT1LawYq51Gg/7kkoyc4Kam8ho6EKBo\nzWqmF8oMf97Dz+WaYZQuQlC345yaC9S16KZzaB+04HJ0Bfq/8GXi1Ky4xc8FdaRC\naC2eSrfMKETCuSoBk0mG9Dog\n-----END PRIVATE KEY-----\n",
+      "client_email":
+          "ramadona-sendnotification@emergency-app-da505.iam.gserviceaccount.com",
+      "client_id": "113154250447566946903",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url":
+          "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url":
+          "https://www.googleapis.com/robot/v1/metadata/x509/ramadona-sendnotification%40emergency-app-da505.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com"
     };
     List<String> scopes = [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/firebase.database",
       "https://www.googleapis.com/auth/firebase.messaging"
     ];
+
     http.Client client = await auth.clientViaServiceAccount(
       auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
       scopes,
     );
+
     auth.AccessCredentials credentials =
         await auth.obtainAccessCredentialsViaServiceAccount(
-            auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
-            scopes,
-            client);
+      auth.ServiceAccountCredentials.fromJson(serviceAccountJson),
+      scopes,
+      client,
+    );
+
     client.close();
+    log('${credentials.accessToken.data}');
+
     return credentials.accessToken.data;
   }
 
@@ -59,13 +64,19 @@ class PushNotificationService {
             .destinationLocation!
             .placeName
             .toString();
+
     String pickUpAddress = Provider.of<AppInfo>(context, listen: false)
         .pickUpLocation!
         .placeName
         .toString();
+
+    //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
     final String serverKey = await getAccessToken();
+    log('${serverKey}');
+    //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
     String endpointFirebaseCloudMessaging =
         'https://fcm.googleapis.com/v1/projects/emergency-app-da505/messages:send';
+    log('${deviceToken}');
 
     final Map<String, dynamic> message = {
       'message': {
@@ -81,19 +92,25 @@ class PushNotificationService {
       }
     };
 
-    final http.Response response = await http.post(
-      Uri.parse(endpointFirebaseCloudMessaging),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $serverKey'
-      },
-      body: jsonEncode(message),
-    );
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(endpointFirebaseCloudMessaging),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $serverKey'
+        },
+        body: jsonEncode(message),
+      );
 
-    if (response.statusCode == 200) {
-      print('message sent');
-    } else {
-      print('not sent');
+      if (response.statusCode == 200) {
+        print('Message sent successfully');
+        print('Response body: ${response.body}');
+      } else {
+        print('Failed to send message. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending message: $e');
     }
   }
 }

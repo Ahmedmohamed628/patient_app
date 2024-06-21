@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -493,9 +494,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   // lw m3ndeesh available driver (ambulance)
-  searchDriver(){
-    if(availableNearbyOnlineAmbulanceDriversList!.length == 0)
-    {
+  searchDriver() {
+    if (availableNearbyOnlineAmbulanceDriversList!.length == 0) {
       cancelRideRequest();
       resetAppNow();
       noDriverAvailable();
@@ -507,17 +507,20 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
     availableNearbyOnlineAmbulanceDriversList!.removeAt(0);
   }
-  noDriverAvailable(){
+
+  noDriverAvailable() {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => InfoDialog(
-          title: "No Ambulance Available",
-          description: "No ambulance found in the nearby location. Please try again shortly.",
-        )
-    );
+              title: "No Ambulance Available",
+              description:
+                  "No ambulance found in the nearby location. Please try again shortly.",
+            ));
   }
+
   sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentDriver) {
+    log("im at DatabaseReference");
     //update driver's newTripStatus - assign tripID to current driver
     DatabaseReference currentDriverRef = FirebaseDatabase.instance
         .ref()
@@ -526,6 +529,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         .child("newTripStatus");
 
     currentDriverRef.set(tripRequestRef!.key);
+    log("im at tokenOfCurrentDriverRef");
 
     //get current driver device recognition token
     DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
@@ -533,22 +537,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         .child("Hospital")
         .child(currentDriver.uidHospitalDriver.toString())
         .child("deviceToken");
+    log("im at tokenOfCurrentDriverRef");
 
-    tokenOfCurrentDriverRef.once().then((dataSnapshot)
-    {
-      if(dataSnapshot.snapshot.value != null)
-      {
+    tokenOfCurrentDriverRef.once().then((dataSnapshot) {
+      if (dataSnapshot.snapshot.value != null) {
         String deviceToken = dataSnapshot.snapshot.value.toString();
 
-        //send notification
-        // PushNotificationService.sendNotificationToSelectedDriver(
-        //     deviceToken,
-        //     context,
-        //     tripRequestRef!.key.toString()
-        // );
-      }
-      else
-      {
+        // send notification
+        PushNotificationService.sendNotificationToSelectedDriver(
+            deviceToken, context, tripRequestRef!.key.toString(), 'test name');
+      } else {
         return;
       }
 
@@ -590,8 +588,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       //     searchDriver();
       //   }
       // });
-    }
-    );
+    });
   }
 
   @override
@@ -786,8 +783,9 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                                       });
                                       displayRequestContainer();
                                       // get nearest available hospitals (online drivers)
-                                      availableNearbyOnlineAmbulanceDriversList = ManageDriversMethods.nearbyOnlineDriversList;
-
+                                      availableNearbyOnlineAmbulanceDriversList =
+                                          ManageDriversMethods
+                                              .nearbyOnlineDriversList;
 
                                       //search driver (hospital)
                                       searchDriver();
