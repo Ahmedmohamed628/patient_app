@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,84 @@ class _ChatScreenPatientState extends State<ChatScreenPatient> {
     );
   }
 }
+/////////////////////////////////////first wroling try not the best
+// Widget _chatList() {
+//   var snapshots = FirebaseFirestore.instance
+//       .collection("Hospitals")
+//       .withConverter(
+//           fromFirestore: (snapshot, options) =>
+//               MyHospital.fromFireStore(snapshot.data()!),
+//           toFirestore: (user, options) => user.toFireStore())
+//       .snapshots();
+//   return StreamBuilder(
+//     stream: snapshots,
+//     builder: (context, snapshot) {
+//       if (snapshot.hasError) {
+//         return Center(child: Text("no data"));
+//       }
+//       if (snapshot.hasData && snapshot.data != null) {
+//         final users = snapshot.data!.docs;
+//         final userCurrent = FirebaseAuth.instance.currentUser;
+//         return ListView.builder(
+//             itemCount: users.length,
+//             itemBuilder: (context, index) {
+//               MyHospital user = users[index].data();
+//               String chatID =
+//                   generateChatID(uid1: userCurrent!.uid, uid2: user.id!);
+//               var unseenMessageStream = FirebaseFirestore.instance
+//                   .collection(Chat.collectionName)
+//                   .doc(chatID)
+//                   .withConverter<Chat>(
+//                     fromFirestore: (snapshot, _) =>
+//                         Chat.fromJson(snapshot.data()!),
+//                     toFirestore: (chat, _) => chat.toJson(),
+//                   )
+//                   .snapshots();
+//               return StreamBuilder<DocumentSnapshot<Chat>>(
+//                   stream: unseenMessageStream,
+//                   builder: (context, snapshot) {
+//                     return FutureBuilder<int>(
+//                       future: getUnseenMessageCount(userCurrent!.uid, user.id!),
+//                       builder: (context, countSnapshot) {
+//                         int unseenCount = countSnapshot.data ?? 0;
 
+//                         // Log unseenCount for debugging
+//                         print(
+//                             'Unseen count for ${user.hospitalName}: $unseenCount');
+
+//                         return ChatTile(
+//                           user: user,
+//                           onTap: () async {
+//                             final chatExists = await checkChatExists(
+//                                 userCurrent!.uid, user.id!);
+//                             if (!chatExists) {
+//                               await createNewChat(userCurrent.uid, user.id!);
+//                             }
+//                             Navigator.of(context).push(
+//                               MaterialPageRoute(
+//                                 builder: (context) {
+//                                   return PrivateChat(
+//                                     chatuser: user,
+//                                   );
+//                                 },
+//                               ),
+//                             );
+//                           },
+//                           unseenCount:
+//                               unseenCount, // Pass the unseen count here
+//                         );
+//                       },
+//                     );
+//                   });
+//             });
+//       }
+//       return Center(child: CircularProgressIndicator());
+//     },
+//   );
+// }
+///////////////////////////////////// seen test
+
+//////////////////////////////////////// seen test finally working 100%
 Widget _chatList() {
   var snapshots = FirebaseFirestore.instance
       .collection("Hospitals")
@@ -45,6 +124,7 @@ Widget _chatList() {
           fromFirestore: (snapshot, options) =>
               MyHospital.fromFireStore(snapshot.data()!),
           toFirestore: (user, options) => user.toFireStore())
+      .where('status', isEqualTo: true) // Filter where 'status' is true
       .snapshots();
   return StreamBuilder(
     stream: snapshots,
@@ -55,36 +135,118 @@ Widget _chatList() {
       if (snapshot.hasData && snapshot.data != null) {
         final users = snapshot.data!.docs;
         final userCurrent = FirebaseAuth.instance.currentUser;
-        return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, Index) {
-              MyHospital user = users[Index].data();
-              return ChatTile(
-                  user: user,
-                  onTap: () async {
-                    final chatExists =
-                        await checkChatExists(userCurrent!.uid, user.id!);
-                    print(chatExists);
-                    if (!chatExists) {
-                      await createNewChat(userCurrent.uid, user.id!);
-                    }
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return PrivateChat(
-                            chatuser: user,
+        var unseenMessageStream = FirebaseFirestore.instance
+            .collection(Chat.collectionName)
+            .withConverter<Chat>(
+              fromFirestore: (snapshot, _) => Chat.fromJson(snapshot.data()!),
+              toFirestore: (chat, _) => chat.toJson(),
+            )
+            .where('participants', arrayContains: userCurrent!.uid)
+            .snapshots();
+        return StreamBuilder(
+          stream: unseenMessageStream,
+          builder: (context, snapshot) {
+            return FutureBuilder<List<Map<String, dynamic>>>(
+              future: getChatsWithUnseenCounts(users, userCurrent!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final chatsWithUnseenCounts = snapshot.data!;
+
+                  return ListView.builder(
+                    itemCount: chatsWithUnseenCounts.length,
+                    itemBuilder: (context, index) {
+                      final chatData = chatsWithUnseenCounts[index];
+                      final MyHospital user = chatData['user'];
+                      final int unseenCount = chatData['unseenCount'];
+                      final String chatID =
+                          generateChatID(uid1: userCurrent.uid, uid2: user.id!);
+
+                      return ChatTile(
+                        user: user,
+                        onTap: () async {
+                          final chatExists =
+                              await checkChatExists(userCurrent.uid, user.id!);
+                          if (!chatExists) {
+                            await createNewChat(userCurrent.uid, user.id!);
+                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return PrivateChat(
+                                  chatuser: user,
+                                );
+                              },
+                            ),
                           );
                         },
-                      ),
-                    );
-                    //02:56 -- 41 00
-                  });
-            });
+                        unseenCount: unseenCount,
+                      );
+                    },
+                  );
+                }
+
+                return Center(child: CircularProgressIndicator());
+              },
+            );
+          },
+        );
       }
       return Center(child: CircularProgressIndicator());
     },
   );
 }
+//////////////////////////////////////// seen test finally working 100%
+
+////////////seen test logic
+Future<List<Map<String, dynamic>>> getChatsWithUnseenCounts(
+    List<QueryDocumentSnapshot<MyHospital>> users, String currentUid) async {
+  List<Map<String, dynamic>> chats = [];
+
+  for (var userDoc in users) {
+    MyHospital user = userDoc.data();
+    int unseenCount = await getUnseenMessageCount(currentUid, user.id!);
+    chats.add({'user': user, 'unseenCount': unseenCount});
+  }
+
+  // Sort chats by unseen message count in descending order
+  chats.sort((a, b) => b['unseenCount'].compareTo(a['unseenCount']));
+  return chats;
+}
+
+Future<int> getUnseenMessageCount(String uid1, String uid2) async {
+  try {
+    String chatID = generateChatID(uid1: uid1, uid2: uid2);
+    log("Generated Chat ID: $chatID");
+
+    var chatDocRef = FirebaseFirestore.instance
+        .collection(Chat.collectionName)
+        .doc(chatID)
+        .withConverter<Chat>(
+          fromFirestore: (snapshot, _) => Chat.fromJson(snapshot.data()!),
+          toFirestore: (chat, _) => chat.toJson(),
+        );
+
+    var chatSnapshot = await chatDocRef.get();
+
+    if (!chatSnapshot.exists) {
+      log("Chat document not found");
+      return 0;
+    }
+
+    Chat chat = chatSnapshot.data()!;
+    int unseenCount = chat.messages!
+        .where((message) => message.senderID != uid1 && !message.seen!)
+        .length;
+
+    log('Unseen count for chatID $chatID: $unseenCount');
+
+    return unseenCount;
+  } catch (e) {
+    log("Failed to get unseen message count: $e");
+    return 0;
+  }
+}
+////////////seen test logic
 
 Future<bool> checkChatExists(String uid1, String uid2) async {
   var snapshots = FirebaseFirestore.instance

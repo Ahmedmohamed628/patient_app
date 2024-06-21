@@ -7,12 +7,14 @@ class Message {
   String? content;
   MessageType? messageType;
   Timestamp? sentAt;
+  bool? seen; //test seen
 
   Message({
     required this.senderID,
     required this.content,
     required this.messageType,
     required this.sentAt,
+    this.seen = false, // Default to false test seen
   });
 
   Message.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,8 @@ class Message {
     content = json['content'];
     sentAt = json['sentAt'];
     messageType = MessageType.values.byName(json['messageType']);
+    seen =
+        json['seen'] ?? false; // Default to false if not present for old chats
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +32,8 @@ class Message {
     data['content'] = content;
     data['sentAt'] = sentAt;
     data['messageType'] = messageType!.name;
+    data['seen'] = seen; // test seen
+
     return data;
   }
 }
