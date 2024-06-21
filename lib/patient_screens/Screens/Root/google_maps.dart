@@ -16,10 +16,13 @@ import 'package:patient/patient_screens/Screens/Root/lottie_image.dart';
 import 'package:patient/patient_screens/Screens/Root/search_destination_page.dart';
 import 'package:patient/theme/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '../../../global/trip_var.dart';
+import '../../../info_dialog.dart';
 import '../../../loading_dialog.dart';
 import '../../../methods/manage_drivers_methods.dart';
+import '../../../methods/push_notification_service.dart';
 import '../../../model/direction_details.dart';
 import '../../../model/my_user.dart';
 import '../../../model/online_nearby_drivers.dart';
@@ -49,7 +52,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   bool nearbyOnlineDriversKeysLoaded = false;
   BitmapDescriptor? hospitalCarIconNearbyDriver;
   DatabaseReference? tripRequestRef;
-  MyUser? _user;
+  List<OnlineNearbyHospitalsDrivers>? availableNearbyOnlineAmbulanceDriversList;
   CommonMethods cMethods = CommonMethods();
 
   final Completer<GoogleMapController> googleMapCompleterController =
@@ -225,6 +228,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       carDetailsDriver = "";
       tripStatusDisplay = 'Driver is Arriving';
     });
+    // Restart.restartApp();
   }
 
   cancelRideRequest() {
@@ -488,6 +492,108 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     // });
   }
 
+  // lw m3ndeesh available driver (ambulance)
+  searchDriver(){
+    if(availableNearbyOnlineAmbulanceDriversList!.length == 0)
+    {
+      cancelRideRequest();
+      resetAppNow();
+      noDriverAvailable();
+      return;
+    }
+
+    var currentAmbulance = availableNearbyOnlineAmbulanceDriversList![0];
+    sendNotificationToDriver(currentAmbulance);
+
+    availableNearbyOnlineAmbulanceDriversList!.removeAt(0);
+  }
+  noDriverAvailable(){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => InfoDialog(
+          title: "No Ambulance Available",
+          description: "No ambulance found in the nearby location. Please try again shortly.",
+        )
+    );
+  }
+  sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentDriver) {
+    //update driver's newTripStatus - assign tripID to current driver
+    DatabaseReference currentDriverRef = FirebaseDatabase.instance
+        .ref()
+        .child("Hospital")
+        .child(currentDriver.uidHospitalDriver.toString())
+        .child("newTripStatus");
+
+    currentDriverRef.set(tripRequestRef!.key);
+
+    //get current driver device recognition token
+    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
+        .ref()
+        .child("Hospital")
+        .child(currentDriver.uidHospitalDriver.toString())
+        .child("deviceToken");
+
+    tokenOfCurrentDriverRef.once().then((dataSnapshot)
+    {
+      if(dataSnapshot.snapshot.value != null)
+      {
+        String deviceToken = dataSnapshot.snapshot.value.toString();
+
+        //send notification
+        // PushNotificationService.sendNotificationToSelectedDriver(
+        //     deviceToken,
+        //     context,
+        //     tripRequestRef!.key.toString()
+        // );
+      }
+      else
+      {
+        return;
+      }
+
+      const oneTickPerSec = Duration(seconds: 1);
+
+      // var timerCountDown = Timer.periodic(oneTickPerSec, (timer)
+      // {
+      //   requestTimeoutDriver = requestTimeoutDriver - 1;
+      //
+      //   //when trip request is not requesting means trip request cancelled - stop timer
+      //   if(stateOfApp != "requesting")
+      //   {
+      //     timer.cancel();
+      //     currentDriverRef.set("cancelled");
+      //     currentDriverRef.onDisconnect();
+      //     requestTimeoutDriver = 20;
+      //   }
+      //
+      //   //when trip request is accepted by online nearest available driver
+      //   currentDriverRef.onValue.listen((dataSnapshot)
+      //   {
+      //     if(dataSnapshot.snapshot.value.toString() == "accepted")
+      //     {
+      //       timer.cancel();
+      //       currentDriverRef.onDisconnect();
+      //       requestTimeoutDriver = 20;
+      //     }
+      //   });
+      //
+      //   //if 20 seconds passed - send notification to next nearest online available driver
+      //   if(requestTimeoutDriver == 0)
+      //   {
+      //     currentDriverRef.set("timeout");
+      //     timer.cancel();
+      //     currentDriverRef.onDisconnect();
+      //     requestTimeoutDriver = 20;
+      //
+      //     //send notification to next nearest online available driver
+      //     searchDriver();
+      //   }
+      // });
+    }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     makeDriverNearbyCarIcon();
@@ -680,8 +786,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                                       });
                                       displayRequestContainer();
                                       // get nearest available hospitals (online drivers)
+                                      availableNearbyOnlineAmbulanceDriversList = ManageDriversMethods.nearbyOnlineDriversList;
+
 
                                       //search driver (hospital)
+                                      searchDriver();
                                     },
                                     child: LottieImage(),
                                     // Image.asset(
