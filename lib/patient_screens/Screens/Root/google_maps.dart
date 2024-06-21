@@ -350,8 +350,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   makeTripRequest() {
-    tripRequestRef =
-        FirebaseDatabase.instance.ref().child("tripRequests").push();
+    tripRequestRef = FirebaseDatabase.instance.ref().child("tripRequests").push();
 
     var pickUpLocation =
         Provider.of<AppInfo>(context, listen: false).pickUpLocation;
@@ -503,6 +502,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     }
 
     var currentAmbulance = availableNearbyOnlineAmbulanceDriversList![0];
+    // send notification to this current ambulance
     sendNotificationToDriver(currentAmbulance);
 
     availableNearbyOnlineAmbulanceDriversList!.removeAt(0);
@@ -519,13 +519,13 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             ));
   }
 
-  sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentDriver) {
+  sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentAmbulance) {
     log("im at DatabaseReference");
     //update driver's newTripStatus - assign tripID to current driver
     DatabaseReference currentDriverRef = FirebaseDatabase.instance
         .ref()
         .child("Hospital")
-        .child(currentDriver.uidHospitalDriver.toString())
+        .child(currentAmbulance.uidHospitalDriver.toString())
         .child("newTripStatus");
 
     currentDriverRef.set(tripRequestRef!.key);
@@ -535,7 +535,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
         .ref()
         .child("Hospital")
-        .child(currentDriver.uidHospitalDriver.toString())
+        .child(currentAmbulance.uidHospitalDriver.toString())
         .child("deviceToken");
     log("im at tokenOfCurrentDriverRef");
 
@@ -588,7 +588,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       //     searchDriver();
       //   }
       // });
-    });
+    }
+    );
   }
 
   @override
@@ -783,9 +784,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                                       });
                                       displayRequestContainer();
                                       // get nearest available hospitals (online drivers)
-                                      availableNearbyOnlineAmbulanceDriversList =
-                                          ManageDriversMethods
-                                              .nearbyOnlineDriversList;
+                                      availableNearbyOnlineAmbulanceDriversList = ManageDriversMethods.nearbyOnlineDriversList;
+
 
                                       //search driver (hospital)
                                       searchDriver();

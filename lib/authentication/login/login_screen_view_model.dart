@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:patient/patient_screens/homeScreen_patient.dart';
 
@@ -26,6 +27,9 @@ class LoginScreenViewModel extends ChangeNotifier {
                 email: emailController.text, password: passwordController.text);
         if (credential.user != null) {
           user = credential.user;
+          //todo => real time data base
+          // DatabaseReference usersRef = FirebaseDatabase.instance.ref().child("Patient").child(credential.user!.uid);
+          // await usersRef.once().then((snap){});
         }
 
         // var user = await FirebaseUtils.readUserFromFireStore(credential.user?.uid??"");
