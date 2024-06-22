@@ -113,8 +113,10 @@ class RegisterScreenViewModel extends ChangeNotifier {
               file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
         }
 
-        final databaseReference =
-            FirebaseDatabase.instance.ref().child('patients')child(userSignUp!.uid);
+        final databaseReference = FirebaseDatabase.instance
+            .ref()
+            .child('patients')
+            .child(userSignUp!.uid);
         Map patientMap = {
           "userName": nameController.text,
           "userPhone": phoneNumber.text,
