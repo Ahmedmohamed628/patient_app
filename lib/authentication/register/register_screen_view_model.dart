@@ -39,32 +39,37 @@ class RegisterScreenViewModel extends ChangeNotifier {
   //=========================================================================================================
   // Future<void> patientCollection() async {
   //   try {
-  //     final databaseReference = FirebaseDatabase.instance.ref().child('patients');
+  //     final databaseReference =
+  //         FirebaseDatabase.instance.ref().child('patients');
   //     final snapshot = await databaseReference.once();
   //     final exists = snapshot.snapshot.exists;
   //     if (!exists) {
   //       // Collection might not exist (not guaranteed)
   //       await databaseReference.push().set({});
-  //       print('Patients collection created successfully.......................................................................................');
+  //       print(
+  //           'Patients collection created successfully.......................................................................................');
   //     }
-  //
+
   //     // Optional: Validate user data before storing (if needed)
-  //
+
   //     final patientMap = {
   //       "userName": FirebaseAuth.instance.currentUser!.displayName,
   //       "userPhone": FirebaseAuth.instance.currentUser!.phoneNumber,
   //       "userID": FirebaseAuth.instance.currentUser!.uid,
   //       "email": FirebaseAuth.instance.currentUser!.email,
   //     };
-  //
+
   //     // Create a unique document for each patient (optional)
   //     final newPatientRef = databaseReference.push();
   //     await newPatientRef.set(patientMap);
-  //     print('Patient data saved successfully!........................................... (Document ID: ${newPatientRef.key})');
+  //     print(
+  //         'Patient data saved successfully!........................................... (Document ID: ${newPatientRef.key})');
   //   } catch (error) {
-  //     print('Error creating/saving patient data..............................................: $error');
+  //     print(
+  //         'Error creating/saving patient data..............................................: $error');
   //   }
   // }
+
   //==========================================================================================================
   void register(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
@@ -76,6 +81,7 @@ class RegisterScreenViewModel extends ChangeNotifier {
           email: emailController.text,
           password: passwordController.text,
         );
+
         //========================================================================================================>>>>>>>>>
         //todo => real time database
         // final databaseReference = FirebaseDatabase.instance.ref().child('patients');
@@ -106,6 +112,17 @@ class RegisterScreenViewModel extends ChangeNotifier {
           pfpURL = await uplaodPfp(
               file: RegisterScreen.selectedImage!, Uid: currentstatus.uid);
         }
+
+        final databaseReference =
+            FirebaseDatabase.instance.ref().child('patients');
+        Map patientMap = {
+          "userName": nameController.text,
+          "userPhone": phoneNumber.text,
+          "userID": userSignUp!.uid,
+          "email": emailController.text,
+        };
+        databaseReference.set(patientMap);
+
         MyUser myUser = MyUser(
           phoneNumber: phoneNumber.text,
           address: address.text,
@@ -126,7 +143,6 @@ class RegisterScreenViewModel extends ChangeNotifier {
 
         // var authProvider = Provider.of<AuthProvider>(context,listen: false);
         // authProvider.updateUser(myUser);
-
 
         await FirebaseUtils.addUserToFireStore(myUser);
         //todo: hide loading
