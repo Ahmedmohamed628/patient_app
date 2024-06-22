@@ -34,7 +34,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: FirebaseOptions(
       apiKey: 'AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI',
-      appId: '1:237732499396:android:fc5cf8ca28138255cfde91',
+      appId: '1:237732499396:android:4be660d63196dc67cfde91',
       messagingSenderId: '237732499396',
       projectId: 'emergency-app-da505',
       storageBucket: 'emergency-app-da505.appspot.com',

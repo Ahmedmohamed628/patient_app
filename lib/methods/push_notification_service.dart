@@ -72,7 +72,7 @@ class PushNotificationService {
 
     //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
     final String serverKey = await getAccessToken();
-    log('${serverKey}');
+    log(' this is server token : ${serverKey}');
     //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
     String endpointFirebaseCloudMessaging =
         'https://fcm.googleapis.com/v1/projects/emergency-app-da505/messages:send';
@@ -87,10 +87,11 @@ class PushNotificationService {
               "PickUp Location: $pickUpAddress \nDestination Location: $dropOffDestinationAddress"
         },
         'data': {
-          'tripId': tripID,
+          'tripID': tripID,
         }
       }
     };
+    log('${message}');
 
     try {
       final http.Response response = await http.post(
