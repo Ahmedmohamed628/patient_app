@@ -551,8 +551,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       const oneTickPerSec = Duration(seconds: 1);
 
-      var timerCountDown = Timer.periodic(oneTickPerSec, (timer)
-      {
+      var timerCountDown = Timer.periodic(oneTickPerSec, (timer) {
         requestTimeoutDriver = requestTimeoutDriver - 1;
 
         //when trip request is not requesting means trip request cancelled - stop timer
