@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patient/theme/theme.dart';
+import 'package:restart_app/restart_app.dart';
 
 class InfoDialog extends StatefulWidget
 {

@@ -19,6 +19,7 @@ import 'package:patient/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
 
+import '../../../authentication/register/register_screen_view_model.dart';
 import '../../../global/trip_var.dart';
 import '../../../info_dialog.dart';
 import '../../../loading_dialog.dart';
@@ -27,7 +28,7 @@ import '../../../methods/push_notification_service.dart';
 import '../../../model/direction_details.dart';
 import '../../../model/my_user.dart';
 import '../../../model/online_nearby_drivers.dart';
-
+int requestTimeoutDriver = 20;
 String googleMapKey = 'AIzaSyDGoIsHdQjW9hidXSdbW3xS4YqKVGfYJGI';
 
 class GoogleMapScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class GoogleMapScreen extends StatefulWidget {
 }
 
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
+  RegisterScreenViewModel viewModelRegister = RegisterScreenViewModel();
   Position? currentPositionOfUser;
   double searchContainerHeight = 276;
   double bottomMapPadding = 0;
@@ -252,6 +254,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     makeTripRequest();
   }
 
+  // icon el hospital
   updateAvailableNearbyOnlineDriversOnMap() {
     setState(() {
       markerSet.clear();
@@ -259,8 +262,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
     Set<Marker> markersTempSet = Set<Marker>();
 
-    for (OnlineNearbyHospitalsDrivers eachOnlineNearbyDriver
-        in ManageDriversMethods.nearbyOnlineDriversList) {
+    for (OnlineNearbyHospitalsDrivers eachOnlineNearbyDriver in ManageDriversMethods.nearbyOnlineDriversList) {
       LatLng driverCurrentPosition = LatLng(
           eachOnlineNearbyDriver.latHospitalDriver!,
           eachOnlineNearbyDriver.lngHospitalDriver!);
@@ -327,13 +329,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
           // case3: lw el hospital driver byt7rk gowa el radius
           case Geofire.onKeyMoved:
-            OnlineNearbyHospitalsDrivers onlineNearbyDrivers =
-                OnlineNearbyHospitalsDrivers();
+            OnlineNearbyHospitalsDrivers onlineNearbyDrivers = OnlineNearbyHospitalsDrivers();
             onlineNearbyDrivers.uidHospitalDriver = driverEvent["key"];
             onlineNearbyDrivers.latHospitalDriver = driverEvent["latitude"];
             onlineNearbyDrivers.lngHospitalDriver = driverEvent["longitude"];
-            ManageDriversMethods.updateOnlineNearbyDriversLocation(
-                onlineNearbyDrivers);
+            // todo => feh moshkla hena?
+            ManageDriversMethods.updateOnlineNearbyDriversLocation(onlineNearbyDrivers);
             //update drivers on google map
             updateAvailableNearbyOnlineDriversOnMap();
             break;
@@ -349,13 +350,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     });
   }
 
-  makeTripRequest() {
+  makeTripRequest(){
     tripRequestRef = FirebaseDatabase.instance.ref().child("tripRequests").push();
 
-    var pickUpLocation =
-        Provider.of<AppInfo>(context, listen: false).pickUpLocation;
-    var dropOffDestinationLocation =
-        Provider.of<AppInfo>(context, listen: false).destinationLocation;
+    var pickUpLocation = Provider.of<AppInfo>(context, listen: false).pickUpLocation;
+    var dropOffDestinationLocation = Provider.of<AppInfo>(context, listen: false).destinationLocation;
 
     Map pickUpCoOrdinatesMap = {
       "latitude": pickUpLocation!.latitudePosition.toString(),
@@ -374,10 +373,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     };
 
     Map dataMap = {
-      "tripID": tripRequestRef!.key,
+      "tripID": tripRequestRef!.key.toString(),
       "publishDateTime": DateTime.now().toString(),
-      "userName": FirebaseAuth.instance.currentUser!.displayName,
-      "userPhone": FirebaseAuth.instance.currentUser!.phoneNumber,
+      "userName": viewModelRegister.nameController.text,
+      "userPhone": viewModelRegister.phoneNumber.text,
       "userID": FirebaseAuth.instance.currentUser!.uid,
       "pickUpLatLng": pickUpCoOrdinatesMap,
       "destinationLatLng": dropOffDestinationCoOrdinatesMap,
@@ -519,11 +518,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             ));
   }
 
-  sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentAmbulance) {
+  sendNotificationToDriver(OnlineNearbyHospitalsDrivers currentAmbulance){
     log("im at DatabaseReference");
     //update driver's newTripStatus - assign tripID to current driver
-    DatabaseReference currentDriverRef = FirebaseDatabase.instance
-        .ref()
+    DatabaseReference currentDriverRef = FirebaseDatabase.instance.ref()
         .child("Hospital")
         .child(currentAmbulance.uidHospitalDriver.toString())
         .child("newTripStatus");
@@ -532,8 +530,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     log("im at tokenOfCurrentDriverRef");
 
     //get current driver device recognition token
-    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance
-        .ref()
+    DatabaseReference tokenOfCurrentDriverRef = FirebaseDatabase.instance.ref()
         .child("Hospital")
         .child(currentAmbulance.uidHospitalDriver.toString())
         .child("deviceToken");
@@ -544,6 +541,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         String deviceToken = dataSnapshot.snapshot.value.toString();
 
         // send notification
+        log(deviceToken);
+        log(tripRequestRef!.key.toString());
         PushNotificationService.sendNotificationToSelectedDriver(
             deviceToken, context, tripRequestRef!.key.toString(), 'test name');
       } else {
@@ -552,42 +551,42 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       const oneTickPerSec = Duration(seconds: 1);
 
-      // var timerCountDown = Timer.periodic(oneTickPerSec, (timer)
-      // {
-      //   requestTimeoutDriver = requestTimeoutDriver - 1;
-      //
-      //   //when trip request is not requesting means trip request cancelled - stop timer
-      //   if(stateOfApp != "requesting")
-      //   {
-      //     timer.cancel();
-      //     currentDriverRef.set("cancelled");
-      //     currentDriverRef.onDisconnect();
-      //     requestTimeoutDriver = 20;
-      //   }
-      //
-      //   //when trip request is accepted by online nearest available driver
-      //   currentDriverRef.onValue.listen((dataSnapshot)
-      //   {
-      //     if(dataSnapshot.snapshot.value.toString() == "accepted")
-      //     {
-      //       timer.cancel();
-      //       currentDriverRef.onDisconnect();
-      //       requestTimeoutDriver = 20;
-      //     }
-      //   });
-      //
-      //   //if 20 seconds passed - send notification to next nearest online available driver
-      //   if(requestTimeoutDriver == 0)
-      //   {
-      //     currentDriverRef.set("timeout");
-      //     timer.cancel();
-      //     currentDriverRef.onDisconnect();
-      //     requestTimeoutDriver = 20;
-      //
-      //     //send notification to next nearest online available driver
-      //     searchDriver();
-      //   }
-      // });
+      var timerCountDown = Timer.periodic(oneTickPerSec, (timer)
+      {
+        requestTimeoutDriver = requestTimeoutDriver - 1;
+
+        //when trip request is not requesting means trip request cancelled - stop timer
+        if(stateOfApp != "requesting")
+        {
+          timer.cancel();
+          currentDriverRef.set("cancelled");
+          currentDriverRef.onDisconnect();
+          requestTimeoutDriver = 20;
+        }
+
+        //when trip request is accepted by online nearest available driver
+        currentDriverRef.onValue.listen((dataSnapshot)
+        {
+          if(dataSnapshot.snapshot.value.toString() == "accepted")
+          {
+            timer.cancel();
+            currentDriverRef.onDisconnect();
+            requestTimeoutDriver = 20;
+          }
+        });
+
+        //if 20 seconds passed - send notification to next nearest online available driver
+        if(requestTimeoutDriver == 0)
+        {
+          currentDriverRef.set("timeout");
+          timer.cancel();
+          currentDriverRef.onDisconnect();
+          requestTimeoutDriver = 20;
+
+          //send notification to next nearest online available driver
+          searchDriver();
+        }
+      });
     }
     );
   }

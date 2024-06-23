@@ -48,7 +48,7 @@ class LoginScreenViewModel extends ChangeNotifier {
         navigator.hideMyLoading();
         //todo: show message
         DialogUtils.showMessage(context, 'Login Successfully',
-            title: 'Sign-Up', posActionName: 'ok', posAction: () {
+            title: 'Login', posActionName: 'ok', posAction: () {
           Navigator.of(context)
               .pushReplacementNamed(HomeScreenPatient.routeName);
         });

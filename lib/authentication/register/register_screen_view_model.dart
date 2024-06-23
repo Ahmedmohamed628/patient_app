@@ -15,8 +15,7 @@ import '../../model/my_user.dart';
 
 class RegisterScreenViewModel extends ChangeNotifier {
   static User? userSignUp;
-  var emailController =
-      TextEditingController(text: 'ahmed.mohamed7patient@gmail.com');
+  var emailController = TextEditingController(text: 'ahmed.mohamed7patient@gmail.com');
   var passwordController = TextEditingController(text: '123456');
   var nameController = TextEditingController(text: 'ahmed');
   var phoneNumber = TextEditingController(text: '01228384694');

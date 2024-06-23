@@ -59,23 +59,15 @@ class PushNotificationService {
     String tripID,
     String userName,
   ) async {
-    String dropOffDestinationAddress =
-        Provider.of<AppInfo>(context, listen: false)
-            .destinationLocation!
-            .placeName
-            .toString();
+    String dropOffDestinationAddress = Provider.of<AppInfo>(context, listen: false).destinationLocation!.placeName.toString();
 
-    String pickUpAddress = Provider.of<AppInfo>(context, listen: false)
-        .pickUpLocation!
-        .placeName
-        .toString();
+    String pickUpAddress = Provider.of<AppInfo>(context, listen: false).pickUpLocation!.placeName.toString();
 
     //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
     final String serverKey = await getAccessToken();
     log(' this is server token : ${serverKey}');
     //ArgumentError (Invalid argument(s): json must be a Map or a String encoding a Map.)
-    String endpointFirebaseCloudMessaging =
-        'https://fcm.googleapis.com/v1/projects/emergency-app-da505/messages:send';
+    String endpointFirebaseCloudMessaging = 'https://fcm.googleapis.com/v1/projects/emergency-app-da505/messages:send';
     log('${deviceToken}');
 
     final Map<String, dynamic> message = {
